@@ -28,13 +28,12 @@ CREATE TABLE IF NOT EXISTS `article` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'the article table';
 
 
-DROP TABLE IF EXISTS `posts`;
-CREATE TABLE IF NOT EXISTS `posts` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `p_userid` int(11) unsigned NOT NULL COMMENT 'the membership id of blog',
+CREATE TABLE `posts` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `article_id` int(11) unsigned NOT NULL COMMENT 'the id of article',
   `content` text NOT NULL COMMENT 'the content of posts',
-  `date` datetime NOT NULL,
-  `ip`        bigint(14) NOT NULL COMMENT 'ip',
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time ',
+  `ip` bigint(14) NOT NULL COMMENT 'ip',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'the posts table';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the posts table';
 
