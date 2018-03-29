@@ -65,7 +65,7 @@ class ArticleForm extends Model
     public function remove($id)
     {
         $article = Article::find()->where(['id'=>$id,'user_id'=>Yii::$app->user->identity->id])->limit(1)->one();
-        $article->show = '0';
+        $article->isshow = '0';
         if(!$article->save()){
             $this->addError($article->getErrors());
             return false;

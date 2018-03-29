@@ -13,7 +13,7 @@ use Yii;
  * @property string $content the content of article
  * @property string $cdate create time
  * @property string $udate update time
- * @property string $show 是否显示 默认是1 显示，0 ： 不显示
+ * @property string $isshow 是否显示 默认是1 显示，0 ： 不显示
  */
 class Article extends \yii\db\ActiveRecord
 {
@@ -33,9 +33,9 @@ class Article extends \yii\db\ActiveRecord
         return [
             [['user_id', 'content'], 'required'],
             [['user_id'], 'integer'],
-            [['content', 'show'], 'string'],
-            [['cdate', 'udate'], 'safe'],
+            [['content'], 'string'],
             [['title'], 'string', 'max' => 255],
+            [['isshow'], 'string', 'max' => 1],
         ];
     }
 
@@ -51,7 +51,7 @@ class Article extends \yii\db\ActiveRecord
             'content' => 'Content',
             'cdate' => 'Cdate',
             'udate' => 'Udate',
-            'show' => 'Show',
+            'isshow' => 'Show',
         ];
     }
 }

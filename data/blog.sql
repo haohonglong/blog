@@ -25,7 +25,7 @@ CREATE TABLE `article` (
   `content` text NOT NULL COMMENT 'the content of article',
   `cdate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
   `udate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
-  `show` enum('1','0') DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
+  `isshow` CHAR NOT NULL DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the article table';
 
@@ -37,7 +37,7 @@ CREATE TABLE `posts` (
   `content` text NOT NULL COMMENT 'the content of posts',
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time ',
   `ip` VARCHAR (15) NOT NULL COMMENT 'ip',
-  `show` enum('1','0') DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
+  `isshow` CHAR NOT NULL DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the posts table';
 
