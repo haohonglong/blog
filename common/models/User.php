@@ -26,8 +26,19 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE = 10;
 
     public $auth_key;
+    public $ip;
 
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
 
+            [['ip'], 'required'],
+            [['ip'], 'string', 'max' => 15],
+        ];
+    }
     /**
      * {@inheritdoc}
      */

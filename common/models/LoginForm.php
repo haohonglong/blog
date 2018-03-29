@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+
 use Yii;
 use yii\base\Model;
 
@@ -12,7 +13,6 @@ class LoginForm extends Model
     public $username;
     public $password;
     public $rememberMe = true;
-
     private $_user;
 
 
@@ -44,7 +44,16 @@ class LoginForm extends Model
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
+            }else{
+                $sql = 'UPDATE user SET ip=:ip,udate=:udate WHERE id=:id';
+                Yii::$app->db->createCommand($sql,[':ip'=>Yii::$app->getRequest()->getUserIP(),':udate'=>date('Y-m-d H:i:s'),':id'=>$user->id])
+                    ->execute();
+//                $user->ip = Yii::$app->getRequest()->getUserIP();
+//                if(!$user->save()){
+//                    $this->addErrors($user->getErrors());
+//                }
             }
+
         }
     }
 

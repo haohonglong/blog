@@ -2,56 +2,18 @@
 
 namespace backend\controllers;
 
+use common\helper\Help;
 use yii;
 use yii\web\Controller;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 
 
 class HomeController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
     public function actionIndex()
     {
 
+        var_dump(Yii::$app->timeZone);exit;
+        echo date('Y-m-d H:i:s');
     }
 }

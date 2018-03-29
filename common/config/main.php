@@ -1,5 +1,6 @@
 <?php
 return [
+    'timeZone' => 'Asia/Shanghai',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -10,4 +11,5 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
     ],
+    'language'=>'zh-CN'
 ];
