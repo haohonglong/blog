@@ -29,10 +29,22 @@ class ArticleController extends BaseController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->goBack();
         } else {
-            return $this->render('index', [
+            return $this->render('add', [
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionRemove()
+    {
+        $request = yii::$app->request;
+        if($request->isGet){
+            $id = $request->get('id');
+            $article = new ArticleForm();
+            $article->remove($id);
+        }
+
+
     }
 
 

@@ -49,7 +49,7 @@ class PostsForm extends Model
     public function remove($id)
     {
         $posts = Posts::find()->where(['id'=>$id])->limit(1)->one();
-        $posts->show = '0';
+        $posts->isshow = '0';
         if(!$posts->save()){
             $this->addError($posts->getErrors());
             return false;
