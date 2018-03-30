@@ -9,11 +9,12 @@ use Yii;
  *
  * @property int $id
  * @property int $user_id
+ * @property int $sorts_id
  * @property string $title the title of article
  * @property string $content the content of article
  * @property string $cdate create time
  * @property string $udate update time
- * @property string $isshow 是否显示 默认是1 显示，0 ： 不显示
+ * @property string $is_show 是否显示 默认是1 显示，0 ： 不显示
  */
 class Article extends \yii\db\ActiveRecord
 {
@@ -31,11 +32,11 @@ class Article extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'content'], 'required'],
-            [['user_id'], 'integer'],
+            [['user_id', 'sorts_id', 'content','cdate', 'udate'], 'required'],
+            [['user_id', 'sorts_id'], 'integer'],
             [['content'], 'string'],
             [['title'], 'string', 'max' => 255],
-            [['isshow'], 'string', 'max' => 1],
+            [['is_show'], 'string', 'max' => 1],
         ];
     }
 
@@ -47,11 +48,12 @@ class Article extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
+            'sorts_id' => 'Sorts ID',
             'title' => 'Title',
             'content' => 'Content',
             'cdate' => 'Cdate',
             'udate' => 'Udate',
-            'isshow' => 'Show',
+            'is_show' => 'Is Show',
         ];
     }
 }

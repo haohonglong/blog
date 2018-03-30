@@ -10,10 +10,11 @@ namespace common\models;
 
 use yii;
 use yii\base\Model;
+use yii\db\Query;
 
 class ArticleForm extends Model
 {
-    public $id,$title,$content;
+    public $id,$sorts_id,$title,$content;
 
     public function rules()
     {
@@ -29,6 +30,7 @@ class ArticleForm extends Model
         if($this->validate()){
             $article = new Article();
             $article->user_id = Yii::$app->user->identity->id;
+            $article->sorts_id = isset($this->sorts_id) ? $this->sorts_id : 0;
             $article->title = $this->title;
             $article->content = $this->content;
             $article->cdate = date('Y-m-d H:i:s');
@@ -47,10 +49,10 @@ class ArticleForm extends Model
     {
         if($this->validate()){
             $article = Article::find()->where(['id'=>$this->id,'user_id'=>Yii::$app->user->identity->id])->limit(1)->one();
+            if(!$article){return false;}
             $article->title = $this->title;
             $article->content = $this->content;
-            $article->cdate = date('Y-m-d H:i:s');
-            $article->udate = $article->cdate;
+            $article->udate = date('Y-m-d H:i:s');
             if(!$article->save()){
                 $this->addError($article->getErrors());
                 return false;
@@ -62,10 +64,20 @@ class ArticleForm extends Model
 
     }
 
+    /**
+     *
+     * @param $id
+     * @return bool
+     */
     public function remove($id)
     {
         $article = Article::find()->where(['id'=>$id,'user_id'=>Yii::$app->user->identity->id])->limit(1)->one();
-        $article->isshow = '0';
+        if(!$article) {return false;}
+        $query = (new Query())->from('posts')->select('id')->where(['article_id'=>$id])->one();
+        if($query){//检查文章里是否有一条评论，有就不删除
+            return false;
+        }
+        $article->is_show = '0';
         if(!$article->save()){
             $this->addError($article->getErrors());
             return false;
