@@ -30,8 +30,14 @@ class ArticleController extends yii\web\Controller
         }
         return $result;
     }
-    private function get_posts($posts,&$arr)
+    private function get_posts($article_id,$arr=[])
     {
+        $query = (new Query())
+            ->from('posts p')
+            ->select('p.id id,p.posts_id posts_id,p.content content,p.date date,p.ip ip')
+            ->leftJoin('article a','a.id = p.article_id')
+            ->where(['p.is_show'=>1,'p.article_id'=>$article_id]);
+        $posts = $query->all();
         foreach ($posts as $k => $item){
             if(!isset($arr[$item['id']]) && 0 == $item['posts_id']){
                 $arr[$item['id']] = [
@@ -61,6 +67,8 @@ class ArticleController extends yii\web\Controller
 
 
         }
+
+        return $arr;
     }
     public function actionDetail()
     {
@@ -71,16 +79,10 @@ class ArticleController extends yii\web\Controller
             ->where(['id'=>1,'is_show'=>1]);
 
         $article = $query->one();
-//        $query = (new Query())
-//            ->from('posts p')
-//            ->select('p.id id,p.posts_id posts_id,p.content content,p.date date,p.ip ip')
-//            ->leftJoin('article a','a.id = p.article_id')
-//            ->where(['p.is_show'=>1,'p.article_id'=>$article['id']]);
-//        $posts = $query->all();
 
-//        $arr = [];
-//        $this->get_posts($posts,$arr);
-        $arr = $this->get_posts2($article['id']);
+
+
+        $arr = $this->get_posts($article['id']);
 
 
         $posts = array_values($arr);
