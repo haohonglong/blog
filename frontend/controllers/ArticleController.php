@@ -23,10 +23,10 @@ class ArticleController extends yii\web\Controller
             ->where(['p.is_show'=>1,'p.article_id'=>$article_id,'p.posts_id'=>$parent_id]);
         $posts = $query->all();
         if(empty($posts)){return null;}
-        foreach ($posts as $cm) {
+        foreach ($posts as $item) {
             $thisArr=&$result[];
-            $cm["children"] = $this->get_posts2($article_id,$cm["id"],$thisArr);
-            $thisArr = $cm;
+            $item["children"] = $this->get_posts2($article_id,$item["id"],$thisArr);
+            $thisArr = $item;
         }
         return $result;
     }
