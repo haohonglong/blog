@@ -35,6 +35,19 @@ class ArticleController extends BaseController
         }
     }
 
+    public function actionEdit()
+    {
+        $model = new ArticleForm();
+        if ($model->load(Yii::$app->request->post()) && $model->edit()) {
+            return $this->goBack();
+        } else {
+            return $this->render('edit', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+
     public function actionRemove()
     {
         $request = yii::$app->request;

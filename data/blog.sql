@@ -46,7 +46,7 @@ CREATE TABLE `posts` (
 DROP TABLE IF EXISTS `sorts`;
 CREATE TABLE `sorts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` int(11) unsigned NOT NULL COMMENT 'the name of sort',
+  `name` VARCHAR(11)  NOT NULL COMMENT 'the name of sort',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the sort table';
 

@@ -13,7 +13,7 @@ use yii\base\Model;
 
 class ArticleForm extends Model
 {
-    public $title,$content;
+    public $id,$title,$content;
 
     public function rules()
     {
@@ -43,10 +43,10 @@ class ArticleForm extends Model
 
     }
 
-    public function update($id)
+    public function edit()
     {
         if($this->validate()){
-            $article = Article::find()->where(['id'=>$id,'user_id'=>Yii::$app->user->identity->id])->limit(1)->one();
+            $article = Article::find()->where(['id'=>$this->id,'user_id'=>Yii::$app->user->identity->id])->limit(1)->one();
             $article->title = $this->title;
             $article->content = $this->content;
             $article->cdate = date('Y-m-d H:i:s');
