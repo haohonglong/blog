@@ -14,6 +14,22 @@ use yii\db\Query;
 class ArticleController extends yii\web\Controller
 {
 
+
+    private function get_posts2($article_id,$parent_id = 0,&$result = []){
+        $query = (new Query())
+            ->from('posts p')
+            ->select('p.id id,p.posts_id posts_id,p.content content,p.date date,p.ip ip')
+            ->leftJoin('article a','a.id = p.article_id')
+            ->where(['p.is_show'=>1,'p.article_id'=>$article_id,'p.posts_id'=>$parent_id]);
+        $posts = $query->all();
+        if(empty($posts)){return null;}
+        foreach ($posts as $cm) {
+            $thisArr=&$result[];
+            $cm["children"] = $this->get_posts2($article_id,$cm["id"],$thisArr);
+            $thisArr = $cm;
+        }
+        return $result;
+    }
     private function get_posts($posts,&$arr)
     {
         foreach ($posts as $k => $item){
@@ -37,6 +53,8 @@ class ArticleController extends yii\web\Controller
                     ];
 
 
+
+
                 }
             }
 
@@ -53,15 +71,16 @@ class ArticleController extends yii\web\Controller
             ->where(['id'=>1,'is_show'=>1]);
 
         $article = $query->one();
-        $query = (new Query())
-            ->from('posts p')
-            ->select('p.id id,p.posts_id posts_id,p.content content,p.date date,p.ip ip')
-            ->leftJoin('article a','a.id = p.article_id')
-            ->where(['p.is_show'=>1,'p.article_id'=>$article['id']]);
-        $posts = $query->all();
+//        $query = (new Query())
+//            ->from('posts p')
+//            ->select('p.id id,p.posts_id posts_id,p.content content,p.date date,p.ip ip')
+//            ->leftJoin('article a','a.id = p.article_id')
+//            ->where(['p.is_show'=>1,'p.article_id'=>$article['id']]);
+//        $posts = $query->all();
 
-        $arr = [];
-        $this->get_posts($posts,$arr);
+//        $arr = [];
+//        $this->get_posts($posts,$arr);
+        $arr = $this->get_posts2($article['id']);
 
 
         $posts = array_values($arr);
