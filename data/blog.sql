@@ -21,11 +21,12 @@ DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) unsigned NOT NULL,
+  `sorts_id` int(11) unsigned NOT NULL,
   `title` varchar(255) DEFAULT NULL COMMENT 'the title of article',
   `content` text NOT NULL COMMENT 'the content of article',
   `cdate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
   `udate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
-  `isshow` CHAR NOT NULL DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
+  `is_show` CHAR NOT NULL DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the article table';
 
@@ -37,8 +38,16 @@ CREATE TABLE `posts` (
   `content` text NOT NULL COMMENT 'the content of posts',
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time ',
   `ip` VARCHAR (15) NOT NULL COMMENT 'ip',
-  `isshow` CHAR NOT NULL DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
+  `is_show` CHAR NOT NULL DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the posts table';
+
+
+DROP TABLE IF EXISTS `sorts`;
+CREATE TABLE `sorts` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` int(11) unsigned NOT NULL COMMENT 'the name of sort',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the sort table';
 
 

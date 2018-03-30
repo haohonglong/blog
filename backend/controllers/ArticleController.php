@@ -17,7 +17,7 @@ class ArticleController extends BaseController
     public function actionIndex()
     {
         $query = (new Query())
-                    ->from('article')->where(['show'=>1]);
+                    ->from('article')->where(['is_show'=>1]);
 
         $list = $query->all();
         var_dump($list);exit;
