@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-12">
             <?php $form = ActiveForm::begin(['id' => 'article-form']); ?>
 
+            <?= $form->field($model, 'sorts_id')->dropDownList($sorts,['prompt'=>'请选择','style'=>'width:15%;']) ?>
             <?= $form->field($model, 'title')->textInput(['autofocus' => true,'style'=>'width:25%;']) ?>
 
             <?= froala\froalaeditor\FroalaEditorWidget::widget([

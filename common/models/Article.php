@@ -32,12 +32,18 @@ class Article extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'sorts_id', 'content','cdate', 'udate'], 'required'],
+            [['user_id', 'sorts_id', 'content'], 'required'],
             [['user_id', 'sorts_id'], 'integer'],
             [['content'], 'string'],
+            [['cdate', 'udate'], 'safe'],
             [['title'], 'string', 'max' => 255],
             [['is_show'], 'string', 'max' => 1],
         ];
+    }
+
+    public static function getById($id)
+    {
+        return self::find()->where(['id'=>$id])->limit(1)->one();
     }
 
     /**

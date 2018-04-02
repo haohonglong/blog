@@ -8,8 +8,11 @@
 
 namespace frontend\controllers;
 
+use common\models\Article;
+use common\models\Vote;
 use yii;
 use yii\db\Query;
+use yii\data\ActiveDataProvider;
 
 class ArticleController extends yii\web\Controller
 {
@@ -70,31 +73,58 @@ class ArticleController extends yii\web\Controller
 
         return $arr;
     }
-    public function actionDetail()
+
+    public function actionIndex()
+    {
+        $keyword = trim(Yii::$app->request->post('keyword'));
+        $query = (Article::find())
+            ->from('article')
+            ->orderBy(['id' => SORT_DESC])
+            ->where(['is_show'=>1]);
+        if(!empty($keyword)){
+            $query->andWhere(['like','title',$keyword]);
+        }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
+        $var = [
+            'dataProvider'=>$dataProvider,
+        ];
+        return $this->render('index',$var);
+    }
+    public function actionView($id)
     {
 
-//        $id = Yii::$app->request->get('id');
-        $query = (new Query())
-                    ->from('article')
-            ->where(['id'=>1,'is_show'=>1]);
+        $article = (new Query())->from('article')->where(['id'=>$id,'is_show'=>1])->limit(1)->one();
+        if(!$article){$this->redirect(['article/index']);}
+        $vote = (new Query())->from('vote')->where(['article_id'=>$id])->all();
+        $votes = [];
 
-        $article = $query->one();
-
-
+        foreach ($vote as $item){
+            if(!isset($votes[$item['type']])){
+                $votes[$item['type']] = [];
+            }
+            $votes[$item['type']][] = 1;
+        }
 
         $arr = $this->get_posts($article['id']);
-
-
         $posts = array_values($arr);
 
         $var = [
             'article'=>$article,
             'posts'=>$posts,
+            'votes'=>$votes,
         ];
 
-        print_r($posts);exit;
-        $this->render('detail',$var);
+//        print_r($posts);exit;
+        return $this->render('view',$var);
     }
+
+
 
 
 

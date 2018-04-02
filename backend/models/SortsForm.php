@@ -6,7 +6,7 @@
  * Time: 8:19 PM
  */
 
-namespace common\models;
+namespace backend\models;
 
 
 use yii\base\Model;
@@ -41,21 +41,7 @@ class SortsForm extends Model
 
     }
 
-    public function edit()
-    {
-        if($this->validate()){
-            $sorts = Sorts::find()->where(['id'=>$this->id])->limit(1)->one();
-            $sorts->name = $this->name;
-            if(!$sorts->save()){
-                $this->addError($sorts->getErrors());
-                return false;
-            }
-            return true;
-        }
 
-        return false;
-
-    }
 
     /**
      * @inheritdoc
@@ -64,7 +50,7 @@ class SortsForm extends Model
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => '名称',
         ];
     }
 }

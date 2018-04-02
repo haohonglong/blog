@@ -23,7 +23,7 @@ CREATE TABLE `article` (
   `user_id` int(11) unsigned NOT NULL,
   `sorts_id` int(11) unsigned NOT NULL,
   `title` varchar(255) DEFAULT NULL COMMENT 'the title of article',
-  `content` text NOT NULL COMMENT 'the content of article',
+  `content` LONGTEXT NOT NULL COMMENT 'the content of article',
   `cdate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
   `udate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
   `is_show` CHAR NOT NULL DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
@@ -50,5 +50,15 @@ CREATE TABLE `sorts` (
   `name` VARCHAR(11)  NOT NULL COMMENT 'the name of sort',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the sort table';
+
+DROP TABLE IF EXISTS `vote`;
+CREATE TABLE `vote` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type` tinyint(3) unsigned NOT NULL COMMENT '投票的类型 1：差；2：一般；3：好',
+  `article_id` int(11) unsigned NOT NULL COMMENT 'the id of article',
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+  `ip` varchar(15) NOT NULL DEFAULT '0' COMMENT '投票用户的ip',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the vote table';
 
 

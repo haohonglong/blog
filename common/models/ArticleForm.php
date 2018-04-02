@@ -20,7 +20,7 @@ class ArticleForm extends Model
     public function rules()
     {
         return [
-            [['title', 'content'], 'required'],
+            [['title', 'content','sorts_id'], 'required'],
             [['content'], 'string'],
             [['title'], 'string', 'max' => 255],
         ];
@@ -55,6 +55,7 @@ class ArticleForm extends Model
     {
         if($this->validate()){
             if(!$article){return false;}
+            $article->sorts_id = $this->sorts_id;
             $article->title = $this->title;
             $article->content = Html::encode($this->content);
             $article->udate = date('Y-m-d H:i:s');
@@ -98,8 +99,9 @@ class ArticleForm extends Model
     public function attributeLabels()
     {
         return [
-            'title' => 'Title',
-            'content' => 'Content',
+            'sorts_id' => '类别名称',
+            'title' => '标题',
+            'content' => '内容',
         ];
     }
 }

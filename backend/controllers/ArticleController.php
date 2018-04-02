@@ -19,26 +19,7 @@ use yii\helpers\Html;
 class ArticleController extends BaseController
 {
 
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
 
-        return ArrayHelper::merge([
-            'access' => [
-                'class' => yii\filters\AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['logout', 'index','add','edit','view','remove'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-        ],parent::behaviors());
-
-    }
     public function actionIndex()
     {
         $keyword = trim(Yii::$app->request->post('keyword'));
@@ -68,15 +49,11 @@ class ArticleController extends BaseController
     public function actionView($id)
     {
 
-        $article = (new Query())->from('article')->where(['id'=>$id])->one();
-
-
+        $article = (new Query())->from('article')->where(['id'=>$id,'is_show'=>1])->limit(1)->one();
         $var = [
             'article'=>$article,
         ];
         return $this->render('view',$var);
-
-
 
     }
 
@@ -88,11 +65,18 @@ class ArticleController extends BaseController
     public function actionAdd()
     {
         $model = new ArticleForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->goBack();
         } else {
+            $sort = (new Query())->from('sorts')->select('id,name')->all();
+            $sorts = [];
+            foreach ($sort as $item){
+                $sorts[$item['id']] = $item['name'];
+            }
             return $this->render('add', [
                 'model' => $model,
+                'sorts' => $sorts,
             ]);
         }
     }
@@ -106,9 +90,16 @@ class ArticleController extends BaseController
             return $this->goBack();
         } else {
             $model->title = $article->title;
+            $model->sorts_id = $article->sorts_id;
             $model->content = Html::decode($article->content);
+            $sort = (new Query())->from('sorts')->select('id,name')->all();
+            $sorts = [];
+            foreach ($sort as $item){
+                $sorts[$item['id']] = $item['name'];
+            }
             return $this->render('edit', [
                 'model' => $model,
+                'sorts' => $sorts,
             ]);
         }
     }

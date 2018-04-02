@@ -27,7 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php ActiveForm::end();?>
     </div>
     <div class="col-md-5 text-right">
-        <a href="<?=Url::to(['/article/add'])?>" class="btn btn-primary btn-sm active" role="button">添加文章</a>
     </div>
 </div>
 
@@ -35,44 +34,16 @@ $this->params['breadcrumbs'][] = $this->title;
     'dataProvider' => $dataProvider,
     'tableOptions'=>['class'=>'table table-striped table-bordered table-hover'],
     'columns' => [
-       'id',
-        [
+       [
             'label'=>'文章标题',
-            'value' => function ($data) {
-                return $data->title;
-            },
-        ],
-        [
-            'label'=>'创建时间',
-            'value' => function ($data) {
-                return $data->cdate;
-            },
-        ],
-        [
-            'label'=>'修改时间',
-            'value' => function ($data) {
-                return $data->udate;
+           'format' => 'html',
+            'value' => function ($data,$key) {
+                return Html::a($data->title, Url::to(['article/view','id'=>$key]));
             },
         ],
 
-        [
-            "class" => "yii\grid\ActionColumn",
-            "template" => "{view}  |   {edit} |  {remove}",
-            "header" => "操作",
-            "buttons" => [
-                "view" => function ($url) {
-                    return Html::a("查看", $url );
-                },
-                "edit" => function ($url) {
-                    return Html::a("修改", $url );
-                },
-                "remove" => function ($url) {
-                    return Html::a("删除", $url );
-                },
 
 
-            ],
-        ],
 
 
 
