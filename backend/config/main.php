@@ -7,6 +7,7 @@ $params = array_merge(
 );
 
 return [
+    'name'=>'博客系统后台',
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
@@ -42,8 +43,11 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/'=>'/article/index',
+                '/site/index'=>'/article/index'
             ],
         ],
+
 
     ],
     'params' => $params,

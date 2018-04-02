@@ -1,6 +1,7 @@
 <?php
 return [
     'timeZone' => 'Asia/Shanghai',
+    'name'=>'博客系统',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

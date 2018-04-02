@@ -11,6 +11,7 @@ use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 
 AppAsset::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -41,10 +42,11 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => yii::t('yii','Login'), 'url' => ['/site/login']];
     } else {
+        $menuItems[] = ['label' => '文章列表', 'url' => ['/article/index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                '退出 (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
