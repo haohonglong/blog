@@ -7,6 +7,7 @@ use backend\assets\AppAsset;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 
@@ -37,6 +38,7 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
+        ['label' => '前台', 'url' => Yii::$app->urlManagerFrontend->createUrl('/article/index')],
         ['label' => yii::t('yii','Home'), 'url' => ['/site/index']],
     ];
     if (Yii::$app->user->isGuest) {

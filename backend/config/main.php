@@ -47,6 +47,12 @@ return [
                 '/site/index'=>'/article/index'
             ],
         ],
+        'urlManagerFrontend' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName'=>false,
+            'baseUrl' => 'http://blog.local',
+        ],
 
 
     ],

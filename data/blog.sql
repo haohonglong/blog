@@ -62,3 +62,14 @@ CREATE TABLE `vote` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the vote table';
 
 
+DROP TABLE IF EXISTS `linkAddress`;
+CREATE TABLE `linkAddress` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `url` varchar(225) NOT NULL,
+  `info` varchar(2000) NOT NULL,
+  `cdate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time ',
+  `udate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time ',
+  `sorts_id` int(11) unsigned NOT NULL COMMENT '当前信息属于哪个类别',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

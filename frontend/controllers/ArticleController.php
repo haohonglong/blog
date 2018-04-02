@@ -106,11 +106,10 @@ class ArticleController extends yii\web\Controller
 
         foreach ($vote as $item){
             if(!isset($votes[$item['type']])){
-                $votes[$item['type']] = [];
+                $votes[$item['type']] = 0;
             }
-            $votes[$item['type']][] = 1;
+            $votes[$item['type']]++;
         }
-
         $arr = $this->get_posts($article['id']);
         $posts = array_values($arr);
 

@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h3 class="panel-title"><?=$article['title']?></h3>
             </div>
             <div class="panel-body">
+                <p class="text-right">发表于: <?=date('Y-m-d',strtotime($article['cdate']))?></p>
                 <?=Html::decode($article['content'])?>
             </div>
         </div>

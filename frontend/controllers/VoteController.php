@@ -20,28 +20,33 @@ class VoteController extends Controller
     {
         $article_id = Yii::$app->request->get('article_id');
         $type = Yii::$app->request->get('type');
-        $ip = Yii::$app->getRequest()->getUserIP();
-        if(Article::getById($article_id)){
-            $count = (new Query())->from('vote')
-                ->where(['article_id'=>$article_id,'ip'=>$ip])->count();
+        if(array_key_exists($type,Yii::$app->params['vote_type'])){
+            $ip = Yii::$app->getRequest()->getUserIP();
+            if(Article::getById($article_id)){
+                $count = (new Query())->from('vote')
+                    ->where(['article_id'=>$article_id,'ip'=>$ip])->count();
 
-            if(!$count){
-                $vote = new Vote();
-                $vote->ip = $ip;
-                $vote->article_id = $article_id;
-                $vote->type = $type;
-                $vote->date = date('Y-m-d H:i:s');
-                if($vote->save()){
-                    echo 'voted success';
+                if(!$count){
+                    $vote = new Vote();
+                    $vote->ip = $ip;
+                    $vote->article_id = $article_id;
+                    $vote->type = $type;
+                    $vote->date = date('Y-m-d H:i:s');
+                    if($vote->save()){
+                        echo 'voted success';
+                    }else{
+                        echo 'vote failed';exit;
+                    }
                 }else{
-                    echo 'vote failed';exit;
+                    echo 'has been voted';exit;
                 }
             }else{
-                echo 'has been voted';exit;
+                echo 'without anything with id';exit;
             }
         }else{
-            echo 'without anything with id';exit;
+            echo 'type inexistent';exit;
         }
+
 
 
 
