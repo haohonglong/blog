@@ -45,6 +45,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => yii::t('yii','Login'), 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => '文章列表', 'url' => ['/article/index']];
+        $menuItems[] = ['label' => '网页地址', 'url' => ['/link-address/index']];
         $menuItems[] = ['label' => '类别', 'url' => ['/sorts/index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')

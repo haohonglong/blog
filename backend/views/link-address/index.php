@@ -9,7 +9,7 @@
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
-$this->title = '类别';
+$this->title = '网页地址';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -25,14 +25,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php ActiveForm::end();?>
     </div>
     <div class="col-md-5 text-right">
-        <a href="<?=Url::to(['/sorts/add'])?>" class="btn btn-primary btn-sm active" role="button">添加类别</a>
+        <a href="<?=Url::to(['/link-address/add'])?>" class="btn btn-primary btn-sm active" role="button">添加地址</a>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <?php foreach ($list as $item):?>
-        <a href="<?=Url::to(['sorts/edit','id'=>$item['id']]);?>" class="label label-primary ML15 MB15" style="font-size:105%;display:inline-block;padding: .5em .9em .6em;"><?=$item['name']?></a>
-        <?php endforeach;?>
-    </div>
-</div>
+

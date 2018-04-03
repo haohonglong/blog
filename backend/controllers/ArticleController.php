@@ -70,10 +70,7 @@ class ArticleController extends BaseController
             return $this->goBack();
         } else {
             $sort = (new Query())->from('sorts')->select('id,name')->all();
-            $sorts = [];
-            foreach ($sort as $item){
-                $sorts[$item['id']] = $item['name'];
-            }
+            $sorts = ArrayHelper::map($sort,'id','name');
             return $this->render('add', [
                 'model' => $model,
                 'sorts' => $sorts,
@@ -85,7 +82,7 @@ class ArticleController extends BaseController
     {
 
         $model = new ArticleForm();
-        $article = Article::find()->where(['id'=>$id])->limit(1)->one();
+        $article = Article::getById($id);
         if ($model->load(Yii::$app->request->post()) && $model->edit($article)) {
             return $this->goBack();
         } else {
@@ -93,10 +90,8 @@ class ArticleController extends BaseController
             $model->sorts_id = $article->sorts_id;
             $model->content = Html::decode($article->content);
             $sort = (new Query())->from('sorts')->select('id,name')->all();
-            $sorts = [];
-            foreach ($sort as $item){
-                $sorts[$item['id']] = $item['name'];
-            }
+            $sorts = ArrayHelper::map($sort,'id','name');
+
             return $this->render('edit', [
                 'model' => $model,
                 'sorts' => $sorts,
