@@ -63,12 +63,14 @@ CREATE TABLE `vote` (
 
 
 DROP TABLE IF EXISTS `linkAddress`;
-CREATE TABLE `linkAddress` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `linkAddress` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `url` varchar(516) NOT NULL,
+  `url` varchar(516) NOT NULL DEFAULT '',
   `info` varchar(2000) NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time ',
   `sorts_id` int(11) unsigned NOT NULL COMMENT '当前信息属于哪个类别',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+

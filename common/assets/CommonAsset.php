@@ -9,11 +9,12 @@ use yii\web\AssetBundle;
  */
 class CommonAsset extends AssetBundle
 {
-    public $sourcePath = '@common/css';
+    public $sourcePath = '@common/';
     public $css = [
-        'global.css'
+        'css/global.css'
     ];
     public $js = [
+        'js/vue.js',
     ];
     public $depends = [
 
