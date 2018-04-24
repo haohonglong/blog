@@ -14,7 +14,7 @@ use yii\helpers\Html;
 
 class VideoForm extends Model
 {
-    public $date,$source,$title;
+    public $source,$title;
     /**
      * @inheritdoc
      */
@@ -23,7 +23,6 @@ class VideoForm extends Model
         return [
             [['title', 'source'], 'required'],
             [['source'], 'string'],
-            [['id'], 'string', 'max' => 3],
             [['title'], 'string', 'max' => 500],
         ];
     }

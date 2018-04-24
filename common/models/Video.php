@@ -8,8 +8,8 @@ use Yii;
  * This is the model class for table "video".
  *
  * @property int $id
- * @property string $title
- * @property string $source
+ * @property string $title 标题
+ * @property string $source 嵌入视频的源码
  * @property string $date
  */
 class Video extends \yii\db\ActiveRecord
@@ -28,12 +28,15 @@ class Video extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'source', 'date'], 'required'],
+            [['title', 'source'], 'required'],
             [['source'], 'string'],
             [['date'], 'safe'],
-            [['id'], 'string', 'max' => 3],
             [['title'], 'string', 'max' => 500],
         ];
+    }
+    public static function getById($id)
+    {
+        return self::find()->where(['id'=>$id])->limit(1)->one();
     }
 
     /**

@@ -10,6 +10,7 @@ namespace backend\controllers;
 
 use yii;
 use yii\db\Query;
+use yii\helpers\Html;
 use common\models\Video;
 use common\models\VideoForm;
 use yii\web\Controller;
@@ -32,7 +33,7 @@ class VideoController extends Controller
     {
         $model = new VideoForm();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->goBack();
+            return $this->redirect(['video/index']);
         } else {
             return $this->render('add', [
                 'model' => $model,
@@ -42,14 +43,13 @@ class VideoController extends Controller
 
     public function actionEdit($id)
     {
-
         $model = new VideoForm();
         $video = Video::getById($id);
+
         if ($model->load(Yii::$app->request->post()) && $model->edit($video)) {
-            return $this->goBack();
+            return $this->redirect(['video/index']);
         } else {
             $model->title  = $video->title;
-            $model->date   = $video->date;
             $model->source = Html::decode($video->source);
             return $this->render('edit', [
                 'model' => $model,
