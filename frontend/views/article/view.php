@@ -12,6 +12,7 @@ use yii\helpers\Html;
 $this->title = '修改文章';
 $this->params['breadcrumbs'][] = $this->title;
 $posts = json_encode($posts);
+$content = Html::decode($article["content"]);
 ?>
 <script type="text/javascript">
     <?php $this->beginBlock('js'); ?>
@@ -20,26 +21,11 @@ $posts = json_encode($posts);
         var System = this;
 
         new Vue({
-            el: '#posts',
-            data: {
-                posts:<?=$posts?>
-            },
-            methods: {
-
-            },
-            created:function () {
-
-            }
-
-
-        });
-
-        new Vue({
             el: '#article',
             data: {
                 title:"<?=$article['title']?>",
                 date:"<?=date('Y-m-d',strtotime($article['cdate']))?>",
-                content:"<?=Html::decode($article['content'])?>",
+                posts:<?=$posts?>
             },
             methods: {
 
@@ -63,22 +49,22 @@ $posts = json_encode($posts);
     <?php $this->endBlock(); ?>
 </script>
 <?php $this->registerJs($this->blocks['js'], \yii\web\View::POS_END); //将编写的js代码注册到页面底部  ?>
-<div class="row" id="article">
-    <div class="col-md-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{title}}</h3>
+<div id="article">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{title}}</h3>
+                </div>
+                <div class="panel-body">
+                    <p class="text-right">发表于: {{date}}</p>
+                    <?=$content?>
+                </div>
             </div>
-            <div class="panel-body">
-                <p class="text-right">发表于: {{date}}</p>
-                {{content}}
-            </div>
-        </div>
 
+        </div>
     </div>
-</div>
-<div id="posts">
-    <div class="panel panel-default" v-for="item in posts">
+    <div class="panel panel-default" v-if="posts.length" v-for="item in posts">
         <div class="panel-heading">
             <h3 class="panel-title">回复{{item.id}}</h3>
         </div>
@@ -92,12 +78,12 @@ $posts = json_encode($posts);
                 <div class="panel-body">
                     {{reply.content}}
                     <p>日期：{{reply.date}} | </p>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
