@@ -38,7 +38,7 @@ class ArticleController extends yii\web\Controller
         $query = (new Query())
             ->from('posts p')
             ->select('p.id id,p.posts_id posts_id,p.content content,p.date date,p.ip ip')
-            ->leftJoin('article a','a.id = p.article_id')
+            ->innerJoin('article a','a.id = p.article_id')
             ->where(['p.is_show'=>1,'p.article_id'=>$article_id]);
         $posts = $query->all();
         foreach ($posts as $k => $item){
@@ -53,7 +53,7 @@ class ArticleController extends yii\web\Controller
             }
 
             foreach ($posts as $v){
-                if($item['id'] == $v['posts_id']){
+                if(isset($arr[$item['id']]) && ($item['id'] == $v['posts_id'])){
                     $arr[$item['id']]['reply'][] = [
                         'id'=>$v['id'],
                         'content'=>$v['content'],

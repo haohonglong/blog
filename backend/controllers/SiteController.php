@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use yii;
+use common\models\RegisterFrom;
 use common\models\LoginForm;
 
 /**
@@ -10,7 +11,20 @@ use common\models\LoginForm;
 class SiteController extends BaseController
 {
 
-
+    public function actions() {
+        return yii\helpers\ArrayHelper::merge(
+            parent::actions(),
+            [
+                'captcha' =>  [
+                    'class' => 'yii\captcha\CaptchaAction',
+                    'height' => 50,
+                    'width' => 80,
+                    'minLength' => 4,
+                    'maxLength' => 4
+                ],
+            ]
+        );
+    }
     /**
      * Displays homepage.
      *
@@ -42,6 +56,24 @@ class SiteController extends BaseController
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionRegister()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $model = new RegisterFrom();
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
+            return $this->goBack();
+        } else {
+
+
+            return $this->render('reg', [
+                'model' => $model,
+            ]);
+        }
+
     }
 
     /**

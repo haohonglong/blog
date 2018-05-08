@@ -2,15 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: long
- * Date: 28/03/2018
- * Time: 4:55 PM
+ * Date: 27/04/2018
+ * Time: 11:52 PM
  */
 
 namespace frontend\controllers;
 
+
 use yii\web\Controller;
 
-class HomeController extends Controller
+class HtmlController extends Controller
 {
     public function actionIndex()
     {
@@ -56,12 +57,4 @@ class HomeController extends Controller
         }
         var_dump($tags);exit;
     }
-
-
-
-
-
-
-
-
 }

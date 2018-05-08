@@ -74,3 +74,17 @@ CREATE TABLE IF NOT EXISTS `linkAddress` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 
+--============================================================================================
+--视频
+--============================================================================================
+
+DROP TABLE IF EXISTS `video`;
+CREATE TABLE IF NOT EXISTS `video`(
+	`id`     	INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`title`  	VARCHAR(500) NOT NULL COMMENT '标题',
+	`source` 	text NOT NULL COMMENT '嵌入视频的源码',
+	`date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '',
+	PRIMARY KEY(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '存储视频表';
+
+

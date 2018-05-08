@@ -20,11 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
     LAM.run([jQuery],function ($) {
         'use strict';
         var System = this;
-        var menu=[],list=[];
+
+
         new Vue({
             el: '#address_menu',
             data: {
-                menu:menu
+                menu:[]
             },
             methods: {
                 content: function (id) {
@@ -32,7 +33,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         'sorts_id':id
                     },function(D){
                         if(D.status){
-                            list = D.data;
+                            var list = D.data;
+                            $('#address_content').html(template('address_content_tpl',{list:list}));
+
+
+                            // $('#address_content').html();
+
 
 
                         }
@@ -53,33 +59,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
         });
 
-        // new Vue({
-        //     el:'#address_content'
-        // });
-        //
-        // Vue.component('contents-temp', {
-        //     data: function(){
-        //         return {
-        //             list:list
-        //         };
-        //     },
-        //     template: $('#contents-temp').html()
-        // });
-
-
-        // Vue.component('contents-temp', {
-        //     data: function () {
-        //         return {
-        //             count: 0,
-        //             list:list
-        //         }
-        //     },
-        //     template: $('#contents-temp').html()
-        // });
-        //
-        //
-        // new Vue({ el: '#address_content' })
-
 
 
 
@@ -94,6 +73,11 @@ $this->params['breadcrumbs'][] = $this->title;
 </script>
 
 <?php $this->registerJs($this->blocks['js'], \yii\web\View::POS_END); //将编写的js代码注册到页面底部  ?>
+
+<style type="text/css">
+    #address_menu{height:30em;overflow: auto;}
+    .btn.btn-info a{color:#fff;}
+</style>
 <div class="row ">
     <div class="col-md-7">
 
@@ -112,12 +96,18 @@ $this->params['breadcrumbs'][] = $this->title;
             </template>
         </div>
     </div>
-    <div class="col-md-9" id="address_content">
-            <contents-temp></contents-temp>
+    <div class="col-md-9">
+        <div id="address_content"></div>
     </div>
 </div>
 
-
-<script type="text/html" id="contents-temp">
-    <button v-on:click="count++">You clicked me {{ count }} times.</button>
+<script type="text/html" id="address_content_tpl">
+    <% for(var i=0,len =list.length;i < len; i++){%>
+    <button class="btn btn-info MB10" data-id="<%=list[i]['id']%>">
+        <a href="<%=list[i]['url']%>" target="_blank"><%=list[i]['name']%></a>
+        <a href="/link-address/edit?id=<%=list[i]['id']%>" target="_blank">修改</a>
+    </button>
+    <% }%>
+    </template>
 </script>
+

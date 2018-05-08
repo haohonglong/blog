@@ -15,6 +15,7 @@ class CommonAsset extends AssetBundle
     ];
     public $js = [
         'js/vue.js',
+        'js/artTemplate.js',
     ];
     public $depends = [
 

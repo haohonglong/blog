@@ -112,7 +112,7 @@ class LinkAddressController extends BaseController
     {
         $model = new LinkAddressForm();
         $linkAddress = LinkAddress::findById($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save($linkAddress)) {
+        if ($model->load(Yii::$app->request->post()) && $model->edit($linkAddress)) {
             return $this->redirect(['/link-address/index']);
         } else {
             $model->name = $linkAddress->name;

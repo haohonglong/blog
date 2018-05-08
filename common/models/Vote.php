@@ -37,6 +37,11 @@ class Vote extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getById($id)
+    {
+        return self::find()->where(['id'=>$id])->limit(1)->one();
+    }
+
     /**
      * @inheritdoc
      */
