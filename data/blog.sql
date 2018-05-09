@@ -43,6 +43,8 @@ CREATE TABLE `posts` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the posts table';
 
+ALTER TABLE posts ADD CONSTRAINT KF_ID FOREIGN KEY (article_id) REFERENCES article(id);
+
 
 DROP TABLE IF EXISTS `sorts`;
 CREATE TABLE `sorts` (
