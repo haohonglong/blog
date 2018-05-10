@@ -23,12 +23,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
         new Vue({
-            el: '#address_menu',
+            el: '#container',
             data: {
-                menu:[]
+                menu:[],
+                title:''
             },
             methods: {
-                content: function (id) {
+                content: function (id,title) {
+                    this.title = title;
                     $.get('/link-address/index',{
                         'sorts_id':id
                     },function(D){
@@ -78,28 +80,31 @@ $this->params['breadcrumbs'][] = $this->title;
     #address_menu{height:30em;overflow: auto;}
     .btn.btn-info a{color:#fff;}
 </style>
-<div class="row ">
-    <div class="col-md-7">
-
-    </div>
-    <div class="col-md-5 text-right">
-        <a href="<?=Url::to(['/link-address/add'])?>" class="btn btn-primary btn-sm active" role="button">添加地址</a>
-    </div>
-</div>
-
-
-<div class="row">
-    <div class="col-md-3">
-        <div class="list-group" id="address_menu">
-            <template v-for="item in menu">
-                <a href="javascript:void(0)" @click="content(item.id)" class="list-group-item"  :data-id="item.id" >{{item.name}}</a>
-            </template>
+<div id="container">
+    <div class="row">
+        <div class="col-md-7">
+            <h3>{{title}}</h3>
+        </div>
+        <div class="col-md-5 text-right">
+            <a href="<?=Url::to(['/link-address/add'])?>" class="btn btn-primary btn-sm active" role="button">添加地址</a>
         </div>
     </div>
-    <div class="col-md-9">
-        <div id="address_content"></div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <template v-for="item in menu">
+                    <a href="javascript:void(0)" @click="content(item.id,item.name)" class="list-group-item"  :data-id="item.id" >{{item.name}}</a>
+                </template>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div id="address_content"></div>
+        </div>
     </div>
 </div>
+
 
 <script type="text/html" id="address_content_tpl">
     <% for(var i=0,len =list.length;i < len; i++){%>

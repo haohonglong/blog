@@ -114,6 +114,7 @@ class ArticleController extends yii\web\Controller
         $posts = array_values($arr);
 
         $var = [
+            'article_id'=>$id,
             'article'=>$article,
             'posts'=>$posts,
             'votes'=>$votes,
