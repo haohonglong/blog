@@ -59,37 +59,6 @@ class LinkAddressController extends BaseController
             }
 
         }else{
-//            $query = (new Query())->from('linkaddress lk');
-//            $query->select('lk.id id,lk.name name,lk.url url,lk.info info,lk.date date');
-//            $query->addSelect('s.id sid,s.name title');
-//            $query->innerJoin('sorts s','lk.sorts_id = s.id');
-//            if(!empty($keyword)){
-//                $query->andWhere(['like','name',$keyword]);
-//            }
-//
-//            $list = $query->all();
-//            $lists = [];
-//            foreach ($list as $item){
-//                if(!isset($lists[$item['sid']])){
-//                    $lists[$item['sid']] = [
-//                        'sid'=>$item['sid'],
-//                        'title'=>$item['title'],
-//                        'child'=>[],
-//                    ];
-//                }
-//                $lists[$item['sid']]['child'][] = [
-//                    'id'=>$item['id'],
-//                    'name'=>$item['name'],
-//                    'info'=>$item['info'],
-//                    'date'=>$item['date'],
-//                ];
-//
-//            }
-//            $lists = array_values($lists);
-//            $var = [
-//                '$list'=>$lists,
-//            ];
-//        print_r($lists);exit;
             return $this->render('index');
         }
 
@@ -127,5 +96,46 @@ class LinkAddressController extends BaseController
             ]);
         }
     }
-    public function actionRemove(){}
+
+    /**
+     * 批量修改地址的sorts_id
+     */
+    public function actionBatchMoveSort(){
+        $request = yii::$app->request;
+        $ids = $request->post('ids');
+        $sorts_id = $request->post('sorts_id');
+        $r = LinkAddress::updateAll(['sorts_id'=>$sorts_id],['in','sorts_id',explode(',',$ids)]);
+        if($request->isAjax){
+            if($r){
+                $var = [
+                    'status'=>1,
+                ];
+            }else{
+                $var = [
+                    'status'=>0,
+                ];
+            }
+            echo json_encode($var);
+
+        }else{
+
+        }
+    }
+    public function actionRemove(){
+        $request = yii::$app->request;
+        if($request->isAjax){
+            if(LinkAddress::removeById($request->post('id'))){
+                $var = [
+                    'status'=>1,
+                ];
+            }else{
+                $var = [
+                    'status'=>0,
+                ];
+            }
+            echo json_encode($var);
+            exit;
+        }
+
+    }
 }

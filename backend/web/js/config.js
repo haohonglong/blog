@@ -45,9 +45,8 @@
             'LAM_ENV':'dev',
             'Public':{
                 'ROOT':_ROOT_
-                ,'COMMON':_ROOT_+'/common'
-                ,'PLUGINS':_ROOT_+'/common/plugins'
-                ,'Moudle':function(){return LAMJS.createDict();}
+                ,'COMMON':_ROOT_+'../../common'
+                ,'PLUGINS':_ROOT_+'../../common/plugins'
             },
             'components':{},
             //hashcode 随机种子

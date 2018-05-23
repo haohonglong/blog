@@ -8,19 +8,29 @@
 
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use yii\db\Query;
 
 $this->title = '网页地址';
 $this->params['breadcrumbs'][] = $this->title;
-
-
 ?>
+<script type="text/javascript">
 
+</script>
 <script type="text/javascript">
     <?php $this->beginBlock('js'); ?>
-    LAM.run([jQuery],function ($) {
+    LAM.run(function () {
+        'use strict';
+        var System = this;
+        System.import([
+            '/base/Cache.class',
+            '/base/Storage.class'
+        ], System.classPath);
+    });
+    LAM.wait([jQuery],function ($) {
         'use strict';
         var System = this;
 
+        var cache = new System.Cache('menu_11');
 
         new Vue({
             el: '#container',
@@ -31,20 +41,30 @@ $this->params['breadcrumbs'][] = $this->title;
             methods: {
                 content: function (id,title) {
                     this.title = title;
-                    $.get('/link-address/index',{
-                        'sorts_id':id
-                    },function(D){
-                        if(D.status){
-                            var list = D.data;
-                            $('#address_content').html(template('address_content_tpl',{list:list}));
-
-
-                            // $('#address_content').html();
-
-
-
+                    cache.find('m_id',id,function (index,id) {
+                        var _this = this;
+                        var list=null;
+                        if(-1 === index){
+                            $.get('/link-address/index',{
+                                'sorts_id':id
+                            },function(D){
+                                if(D.status){
+                                    list = D.data;
+                                    _this.add({list:list});
+                                }
+                            },'json');
+                        }else{
+                            list = this.get(index).list;
                         }
-                    },'json');
+                        System.listen(function(){
+                            if(list){
+                                $('#address_content').html(template('address_content_tpl',{list:list}));
+                                return true;
+                            }
+                        },1);
+
+                    });
+
                 }
             },
             created:function () {
@@ -61,15 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         });
 
-
-
-
-
-
-
-
-
-    });
+    },100);
 
     <?php $this->endBlock(); ?>
 </script>
@@ -92,11 +104,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3" id="address_menu">
             <div class="list-group">
-                <template v-for="item in menu">
-                    <a href="javascript:void(0)" @click="content(item.id,item.name)" class="list-group-item"  :data-id="item.id" >{{item.name}}</a>
-                </template>
+                <div v-if="menu.length">
+                    <template v-for="item in menu">
+                        <a href="javascript:void(0)" @click="content(item.id,item.name)" class="list-group-item"  :data-id="item.id" >{{item.name}}</a>
+                    </template>
+                </div>
+                <div v-else>
+                    没有数据
+                </div>
             </div>
         </div>
         <div class="col-md-9">

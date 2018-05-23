@@ -9,6 +9,7 @@
 namespace frontend\controllers;
 
 use common\models\Article;
+use common\models\PostsForm;
 use common\models\Vote;
 use yii;
 use yii\db\Query;
@@ -99,6 +100,11 @@ class ArticleController extends yii\web\Controller
     public function actionView($id)
     {
 
+        $model = new PostsForm();
+        if($model->load(Yii::$app->request->post()) && $model->save()){
+
+        }
+
         $article = (new Query())->from('article')->where(['id'=>$id,'is_show'=>1])->limit(1)->one();
         if(!$article){$this->redirect(['article/index']);}
         $vote = (new Query())->from('vote')->where(['article_id'=>$id])->all();
@@ -118,10 +124,12 @@ class ArticleController extends yii\web\Controller
             'article'=>$article,
             'posts'=>$posts,
             'votes'=>$votes,
+            'model'=>$model,
         ];
 
 //        print_r($posts);exit;
         return $this->render('view',$var);
+
     }
 
 

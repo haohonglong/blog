@@ -29,6 +29,20 @@ class LinkAddress extends \yii\db\ActiveRecord
         return self::find()->where(['id'=>$id])->limit(1)->one();
     }
 
+    public static function removeById($id)
+    {
+        $model = static::findById($id);
+        if($model){
+            if($model->delete()){
+                return true;
+            }else{
+                $model->getErrors();
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @inheritdoc
      */

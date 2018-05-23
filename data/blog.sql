@@ -40,7 +40,8 @@ CREATE TABLE `posts` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time ',
   `ip` VARCHAR (15) NOT NULL DEFAULT '0' COMMENT 'ip',
   `is_show` CHAR NOT NULL DEFAULT '1' COMMENT '是否显示 默认是1 显示，0 ： 不显示',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY KF_ID (article_id) REFERENCES article(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the posts table';
 
 ALTER TABLE posts ADD CONSTRAINT KF_ID FOREIGN KEY (article_id) REFERENCES article(id);
@@ -48,10 +49,11 @@ ALTER TABLE posts ADD CONSTRAINT KF_ID FOREIGN KEY (article_id) REFERENCES artic
 
 DROP TABLE IF EXISTS `sorts`;
 CREATE TABLE `sorts` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(11)  NOT NULL COMMENT 'the name of sort',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the sort table';
+insert into `blog`.`sorts` (id,name) (select id,name from `management_of_system`.`sorts`)
 
 DROP TABLE IF EXISTS `vote`;
 CREATE TABLE `vote` (
@@ -71,11 +73,11 @@ CREATE TABLE IF NOT EXISTS `linkAddress` (
   `url` varchar(516) NOT NULL DEFAULT '',
   `info` varchar(2000) NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time ',
-  `sorts_id` int(11) unsigned NOT NULL COMMENT '当前信息属于哪个类别',
+  `sorts_id` tinyint(3) unsigned NOT NULL COMMENT '当前信息属于哪个类别',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-
-
+insert into `blog`.`linkAddress` (name,url,info,date,sorts_id) (select name,url,info,date,sortsId from `management_of_system`.`video_addres`);
+ALTER TABLE linkAddress ADD CONSTRAINT SORTS_ID FOREIGN KEY (sorts_id) REFERENCES sorts(id);
 --============================================================================================
 --视频
 --============================================================================================
