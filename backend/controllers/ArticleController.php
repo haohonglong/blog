@@ -78,25 +78,30 @@ class ArticleController extends BaseController
         }
     }
 
-    public function actionEdit($id)
+    public function actionEdit($id=null)
     {
-
-        $model = new ArticleForm();
-        $article = Article::getById($id);
-        if ($model->load(Yii::$app->request->post()) && $model->edit($article)) {
-            return $this->goBack();
-        } else {
-            $model->title = $article->title;
-            $model->sorts_id = $article->sorts_id;
-            $model->content = Html::decode($article->content);
-            $sort = (new Query())->from('sorts')->select('id,name')->all();
-            $sorts = ArrayHelper::map($sort,'id','name');
-
-            return $this->render('edit', [
-                'model' => $model,
-                'sorts' => $sorts,
-            ]);
+        $model = Article::getById($id);
+        if(!$model){
+            $model = new Article();
+            $model->add = true;
         }
+        if(yii::$app->request->isPost){
+            $form = new ArticleForm();
+            $form->attributes = Yii::$app->request->post('Article');
+            $form->model = $model;
+            if($form->save()){
+                return $this->goBack();
+            }
+
+        }
+
+        $sort = (new Query())->from('sorts')->select('id,name')->all();
+        $sorts = ArrayHelper::map($sort,'id','name');
+        $model->content = Html::decode($model->content);
+        return $this->render('edit', [
+            'model' => $model,
+            'sorts' => $sorts,
+        ]);
     }
 
 

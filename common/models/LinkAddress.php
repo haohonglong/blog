@@ -64,12 +64,11 @@ class LinkAddress extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
             'name' => '名称',
             'url' => 'Url',
             'info' => '表述内容',
             'date' => '日期',
-            'sorts_id' => 'Sorts ID',
+            'sorts_id' => '类别',
         ];
     }
 }

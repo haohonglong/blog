@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\models\User;
 use yii;
 use common\models\RegisterFrom;
 use common\models\LoginForm;
@@ -48,6 +49,7 @@ class SiteController extends BaseController
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            $_SESSION['user'] = (new yii\db\Query())->from(User::tableName())->where(['id'=>Yii::$app->user->identity->id])->one();
             return $this->goBack();
         } else {
             $model->password = '';

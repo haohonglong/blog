@@ -15,7 +15,7 @@ use yii\helpers\Html;
 
 class ArticleForm extends Model
 {
-    public $id,$sorts_id,$title,$content;
+    public $id,$sorts_id,$title,$content,$model;
 
     public function rules()
     {
@@ -29,13 +29,16 @@ class ArticleForm extends Model
     public function save()
     {
         if($this->validate()){
-            $article = new Article();
+            $article = $this->model;
+            $date = date('Y-m-d H:i:s');
             $article->user_id = Yii::$app->user->identity->id;
             $article->sorts_id = isset($this->sorts_id) ? $this->sorts_id : 0;
             $article->title = $this->title;
             $article->content = Html::encode($this->content);
-            $article->cdate = date('Y-m-d H:i:s');
-            $article->udate = $article->cdate;
+            if($article->add){
+                $article->cdate = $date;
+            }
+            $article->udate = $date;
             if(!$article->save()){
                 $this->addError($article->getErrors());
             }
@@ -46,29 +49,7 @@ class ArticleForm extends Model
 
     }
 
-    /**
-     *
-     * @param $article {Article}
-     * @return bool
-     */
-    public function edit($article)
-    {
-        if($this->validate()){
-            if(!$article){return false;}
-            $article->sorts_id = $this->sorts_id;
-            $article->title = $this->title;
-            $article->content = Html::encode($this->content);
-            $article->udate = date('Y-m-d H:i:s');
-            if(!$article->save()){
-                $this->addError($article->getErrors());
-                return false;
-            }
-            return true;
-        }
 
-        return false;
-
-    }
 
     /**
      *

@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php ActiveForm::end();?>
     </div>
     <div class="col-md-5 text-right">
-        <a href="<?=Url::to(['/article/add'])?>" class="btn btn-primary btn-sm active" role="button">添加文章</a>
+        <a href="<?=Url::to(['/article/edit'])?>" class="btn btn-primary btn-sm active" role="button">添加文章</a>
     </div>
 </div>
 
@@ -38,8 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
        'id',
         [
             'label'=>'文章标题',
+            'format' => 'html',
             'value' => function ($data) {
-                return $data->title;
+                return Html::a($data->title,'/article/view?id='.$data->id);
             },
         ],
         [
@@ -57,15 +58,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
         [
             "class" => "yii\grid\ActionColumn",
-            "template" => "{view}  |   {edit} |  {remove}",
+            "template" => "{remove}",
             "header" => "操作",
             "buttons" => [
-                "view" => function ($url) {
-                    return Html::a("查看", $url );
-                },
-                "edit" => function ($url) {
-                    return Html::a("修改", $url );
-                },
                 "remove" => function ($url) {
                     return Html::a("删除", $url );
                 },
@@ -77,6 +72,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     ],
-    
+
 ]); ?>
 

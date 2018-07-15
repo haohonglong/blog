@@ -13,7 +13,7 @@ use yii\base\Model;
 
 class LinkAddressForm extends Model
 {
-    public $sorts_id,$name,$info,$url;
+    public $sorts_id,$name,$info,$url,$model;
     /**
      * @inheritdoc
      */
@@ -31,7 +31,7 @@ class LinkAddressForm extends Model
     public function save()
     {
         if($this->validate()){
-            $inkAddress = new LinkAddress();
+            $inkAddress = $this->model;
             $inkAddress->sorts_id = isset($this->sorts_id) ? $this->sorts_id : 0;
             $inkAddress->name = $this->name;
             $inkAddress->info = $this->info;
@@ -48,30 +48,7 @@ class LinkAddressForm extends Model
 
     }
 
-    /**
-     *
-     * @param $model {LinkAddressForm}
-     * @return bool
-     */
-    public function edit($model)
-    {
-        if($this->validate()){
-            if(!$model){return false;}
-            $model->sorts_id = $this->sorts_id;
-            $model->name = $this->name;
-            $model->info = $this->info;
-            $model->url = $this->url;
-            $model->date = date('Y-m-d H:i:s');
-            if(!$model->save()){
-                $this->addError($model->getErrors());
-                return false;
-            }
-            return true;
-        }
 
-        return false;
-
-    }
 
     /**
      * @inheritdoc

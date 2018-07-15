@@ -63,35 +63,26 @@ class LinkAddressController extends BaseController
         }
 
     }
-    public function actionAdd()
+
+    public function actionEdit($id=null)
     {
-        $model = new LinkAddressForm();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/link-address/index']);
-        } else {
-            $sort = (new Query())->from('sorts')->select('id,name')->all();
-            $sorts = ArrayHelper::map($sort,'id','name');
-            return $this->render('add', [
-                'model' => $model,
-                'sorts' => $sorts,
-            ]);
-        }
-    }
-    public function actionEdit($id)
-    {
-        $model = new LinkAddressForm();
+
         $linkAddress = LinkAddress::findById($id);
-        if ($model->load(Yii::$app->request->post()) && $model->edit($linkAddress)) {
-            return $this->redirect(['/link-address/index']);
+        if(!$linkAddress){
+            $linkAddress = new LinkAddress();
+        }
+        $model = new LinkAddressForm();
+        if ($model->load(Yii::$app->request->post(),'LinkAddress')) {
+            $model->model = $linkAddress;
+            if($model->save()){
+                return $this->redirect(['/link-address/index']);
+
+            }
         } else {
-            $model->name = $linkAddress->name;
-            $model->url = $linkAddress->url;
-            $model->info = $linkAddress->info;
-            $model->sorts_id = $linkAddress->sorts_id;
             $sort = (new Query())->from('sorts')->select('id,name')->all();
             $sorts = ArrayHelper::map($sort,'id','name');
             return $this->render('edit', [
-                'model' => $model,
+                'model' => $linkAddress,
                 'sorts' => $sorts,
             ]);
         }

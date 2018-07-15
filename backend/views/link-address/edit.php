@@ -10,7 +10,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
 
 
-$this->title = '修改地址';
+$this->title = '地址链接';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">

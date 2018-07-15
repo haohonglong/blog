@@ -18,6 +18,7 @@ use Yii;
  */
 class Article extends \yii\db\ActiveRecord
 {
+    public $add=false;
     /**
      * @inheritdoc
      */
@@ -54,9 +55,9 @@ class Article extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'sorts_id' => 'Sorts ID',
-            'title' => 'Title',
-            'content' => 'Content',
+            'sorts_id' => '类别名称',
+            'title' => '标题',
+            'content' => '内容',
             'cdate' => 'Cdate',
             'udate' => 'Udate',
             'is_show' => 'Is Show',

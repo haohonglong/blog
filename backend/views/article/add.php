@@ -10,7 +10,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
 
 
-$this->title = '添加文章';
+$this->title = '文章';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
