@@ -12,6 +12,46 @@ use yii;
 
 class Help
 {
+    static public function mail($to='',$subject='',$message='',$headers)
+    {
+        $from = $headers['From'];
+        $headers_def = [
+            'From' => '',
+            'Reply-To' => '',
+            'Content-type' => 'text/html; charset=UTF-8',
+            'X-Mailer' => 'PHP/' . phpversion()
+        ];
+        $headers = array_merge($headers_def,$headers);
+        $headers = implode("\r\n", array_map(
+            function ($v, $k) {
+                if(is_array($v)){
+                    return $k.'[]='.implode('&'.$k.'[]=', $v);
+                }else{
+                    return $k.': '.$v;
+                }
+            },
+            $headers,
+            array_keys($headers)
+        ));
+        echo $headers;
+        echo '<br/>';
+//        $headers2 = 'From: '.$from . "\r\n" .
+//            'Reply-To: '.$from . "\r\n" .
+//            'Content-type: text/html; charset=UTF-8' . "\r\n" .
+//            'X-Mailer: PHP/' . phpversion();
+//
+//        echo '<br/>';
+//        echo $headers2;
+//        exit;
+        $a = mail($to, $subject, $message,$headers);
+
+
+        if($a){
+            echo 'successfully';
+        }else{
+            echo 'fail';
+        }
+    }
     static public function ip2long()
     {
         return ip2long(Yii::$app->getRequest()->getUserIP());
@@ -38,7 +78,7 @@ class Help
     static public function video($file)
     {
         //First, see if the file exists
-        if (!is_file($file)) { die("<b>404 File not found!</b>"); }
+//        if (!is_file($file)) { die("<b>404 File not found!</b>"); }
         header( 'Expires: Mon, 1 Apr 1974 05:00:00 GMT' );
         header( 'Pragma: no-cache' );
         header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
