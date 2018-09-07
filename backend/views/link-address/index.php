@@ -36,10 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
             el: '#container',
             data: {
                 menu:[],
-                title:''
+                title:'',
+                sortid:""
             },
             methods: {
                 content: function (id,title) {
+                    this.sortid = id;
                     this.title = title;
                     cache.find('m_id',id,function (index,id) {
                         var _this = this;
@@ -98,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <h3>{{title}}</h3>
         </div>
         <div class="col-md-5 text-right">
-            <a href="<?=Url::to(['/link-address/edit'])?>" class="btn btn-primary btn-sm active" role="button">添加地址</a>
+            <a :href="'/link-address/edit?sortid='+sortid" class="btn btn-primary btn-sm active" role="button">添加地址</a>
         </div>
     </div>
 
