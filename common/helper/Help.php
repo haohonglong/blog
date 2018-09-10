@@ -23,27 +23,26 @@ class Help
         ];
         $headers = array_merge($headers_def,$headers);
         $headers = implode("\r\n", array_map(
-            function ($v, $k) {
-                if(is_array($v)){
-                    return $k.'[]='.implode('&'.$k.'[]=', $v);
-                }else{
-                    return $k.': '.$v;
-                }
-            },
+            function ($v, $k) {return sprintf("%s: %s", $k, $v);},
             $headers,
             array_keys($headers)
         ));
         echo $headers;
         echo '<br/>';
-//        $headers2 = 'From: '.$from . "\r\n" .
-//            'Reply-To: '.$from . "\r\n" .
+        $headers2 = 'From: '.$from . "\r\n" .
+            'Reply-To: '.$from . "\r\n" .
 //            'Content-type: text/html; charset=UTF-8' . "\r\n" .
-//            'X-Mailer: PHP/' . phpversion();
-//
-//        echo '<br/>';
-//        echo $headers2;
+            'X-Mailer: PHP/' . phpversion();
+
+
+
+
+
+        echo '<br/>';
+        echo $headers2;
+        echo '<br/>';
 //        exit;
-        $a = mail($to, $subject, $message,$headers);
+        $a = mail($to, $subject, $message,$headers2);
 
 
         if($a){
