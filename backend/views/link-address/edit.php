@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-12">
             <?php $form = ActiveForm::begin(['id' => 'article-form']); ?>
             <?php $a = Html::a('添加类别',Url::to(['/sorts/add']),['class'=>'btn btn-primary btn-sm active ML10']);?>
-            <?= $form->field($model, 'sorts_id',['template'=>'{label} <br /> {input}'.$a.'{hint}{error}'])->dropDownList($sorts,['value' => isset($_GET['sortid']) ? $_GET['sortid'] : '','prompt'=>'请选择','style'=>'width:15%;display:inline-block;']) ?>
+            <?= $form->field($model, 'sorts_id',['template'=>'{label} <br /> {input}'.$a.'{hint}{error}'])->dropDownList($sorts,['value' => isset($sortid) ? $sortid : '','prompt'=>'请选择','style'=>'width:15%;display:inline-block;']) ?>
 
             <?= $form->field($model, 'name')->textInput(['autofocus' => true,'style'=>'width:25%;']) ?>
             <?= $form->field($model, 'url')->textInput() ?>

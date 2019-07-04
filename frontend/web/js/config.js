@@ -45,9 +45,8 @@
             'LAM_ENV':'dev',
             'Public':{
                 'ROOT':_ROOT_
-                ,'COMMON':_ROOT_+'/common'
-                ,'PLUGINS':_ROOT_+'/common/plugins'
-                ,'Moudle':function(){return LAMJS.createDict();}
+                ,'COMMON':_ROOT_+'../../common'
+                ,'PLUGINS':_ROOT_+'../../common/plugins'
             },
             'components':{},
             //hashcode 随机种子
@@ -69,8 +68,27 @@
                 ROOT = this.Public.ROOT;
                 var classPath=this.getClassPath();
                 return [
-                     classPath+'/build/base.min.js'
-                    ,classPath+'/Tab.class.js'
+                    classPath+'/jQuery/jquery.js'
+                    // ,classPath+'/build/base.min.js'
+
+                    ,classPath+'/base/Base.class.js'
+                    ,classPath+'/base/Object.class.js'
+                    ,classPath+'/base/Component.class.js'
+                    ,classPath+'/base/Compiler.class.js'
+                    ,classPath+'/base/Base64.class.js'
+                    ,classPath+'/base/Cache.class.js'
+                    ,classPath+'/base/HttpRequest.class.js'
+                    ,classPath+'/base/Helper.class.js'
+                    ,classPath+'/base/Browser.class.js'
+                    ,classPath+'/base/Event.class.js'
+                    ,classPath+'/base/Dom.class.js'
+                    ,classPath+'/base/View.class.js'
+                    ,classPath+'/base/Template.class.js'
+                    ,classPath+'/base/Html.class.js'
+
+                    ,classPath+'/base/Loader.class.js'
+
+                    ,classPath+'/base/Storage.class.js'
                 ];
             },
             //标签的渲染方式
@@ -137,125 +155,13 @@
                     this.default.script.Attribute.defer='';
                 }
             },
-            'init':{},
             'params':{},
             'getClassPath':function(){
                 return this.vendorPath;
             }
         };
-
-        System.wait=function(callback,time){
-            time = time || 15000;
-            window.setTimeout(function(){
-                callback.call(System);
-            }, time);
-        };
-
-        /**
-         * @author: lhh
-         * 产品介绍：
-         * 创建日期：2016-9-30
-         * 修改日期：2016-9-30
-         * 名称：System.open
-         * 功能：打开一个新文档，并擦除当前文档的内容
-         * 说明：
-         * 注意：
-         * @return  {Document}
-         */
-        System.open=function(mimetype,replace){
-            mimetype = mimetype || "text/html";
-            replace = replace 	|| "replace";
-            return document.open(mimetype,replace)
-        };
-
-        /**
-         * @author: lhh
-         * 产品介绍：
-         * 创建日期：2015-9-16
-         * 修改日期：2016-9-30
-         * 名称：System.print
-         * 功能：输出
-         * 说明：
-         * 注意：
-         * @param   (String)S 			NO NULL :
-         * @return  (voide)						:
-         * Example：
-         */
-        System.print=function(S){
-            if(Config.render.create){
-                Config.render.H().body.appendChild(Config.render.fragment);
-            }else{
-                var document=System.open();
-                document.write(S);
-                System.close(document);
-            }
-        };
-        /**
-         * @author: lhh
-         * 产品介绍：
-         * 创建日期：2016-9-30
-         * 修改日期：2016-9-30
-         * 名称：System.close
-         * 功能：关闭输出文档流
-         * 说明：
-         * 注意：
-         * @return  (voide)
-         */
-        System.close=function(document){document = document || window.document;document.close();};
         return System;
     });
-
-
-    //加载初始化文件
-    //=============================================================================================================
-    (function(System){
-        Config.files = Config.files || [];
-        var tag = "script",scriptAttribute = Config.render.default.script.Attribute,i = 0,len,data = scriptAttribute,classPath=Config.getClassPath(),files=[];
-        //加载基础类
-        var srcs =Config.autoLoadFile();
-        if(typeof requirejs != 'undefined'){
-            requirejs.config({
-                baseUrl: ''
-                ,waitSeconds:0
-            });
-            requirejs(srcs,function(){});
-
-        }else{
-            var attrs=[];
-            for(var k in scriptAttribute){
-                attrs.push(k,'=','"',scriptAttribute[k],'"',' ');
-            }
-            if(srcs.length){
-                for(i=0,len = srcs.length;i < len; i++){
-                    //确保每个文件只加载一次
-                    if(Config.files.indexOf(srcs[i]) != -1){continue;}
-                    Config.files.push(srcs[i]);
-                    if(Config.render.create){
-                        data.src = srcs[i];
-                        Config.render.bulid(tag,data)
-                    }else{
-                        files.push('<',tag,' ',attrs.join(''),'src=','"',srcs[i],'"','>','<','/',tag,'>');
-                    }
-                }
-                System.print(files.join(''));
-            }
-
-            //=================================================================================================================================
-            //3分钟之后检测lamborghiniJS基础类文件是否加载成功
-            //=================================================================================================================================
-            System.wait(function(){
-                if(!LAMJS){
-                    throw new Error("does't find the lamborghiniJS's path of  Basis classes , now the path is :{"+classPath+"}");
-                }else{
-                    LAMJS.run(function() {
-                        'use strict';
-                        var System=this;
-                    });
-                }
-            },30000);
-            //=================================================================================================================================
-        }
-    })(System);
 })(this);
 
 

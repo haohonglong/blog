@@ -26,64 +26,88 @@ $this->params['breadcrumbs'][] = $this->title;
             '/base/Storage.class'
         ], System.classPath);
     });
-    LAM.wait([jQuery],function ($) {
+    LAM.run([jQuery],function ($) {
         'use strict';
         var System = this;
 
         var cache = new System.Cache('menu_11');
+        $(function () {
+            $(document).on("click","#address_menu a",function () {
+                $("#address_menu a").removeAttr('style'," ");
+                $(this).css({
+                    'background-color':'#f5f5f5'
+                });
 
-        new Vue({
-            el: '#container',
-            data: {
-                menu:[],
-                title:'',
-                sortid:""
-            },
-            methods: {
-                content: function (id,title) {
-                    this.sortid = id;
-                    this.title = title;
-                    cache.find('m_id',id,function (index,id) {
-                        var _this = this;
-                        var list=null;
-                        if(-1 === index){
-                            $.get('/link-address/index',{
-                                'sorts_id':id
-                            },function(D){
-                                if(D.status){
-                                    list = D.data;
-                                    _this.add({list:list});
-                                }
-                            },'json');
-                        }else{
-                            list = this.get(index).list;
-                        }
-                        System.listen(function(){
-                            if(list){
-                                $('#address_content').html(template('address_content_tpl',{list:list}));
-                                return true;
+            });
+            new Vue({
+                el: '#container',
+                data: {
+                    menu:[],
+                    title:'',
+                    sortid:""
+                },
+                methods: {
+                    content: function (id,title) {
+                        this.sortid = id;
+                        this.title = title;
+                        cache.find('m_id',id,function (index,id) {
+                            var _this = this;
+                            var list=null;
+                            if(-1 === index){
+                                $.get('/link-address/index',{
+                                    'sorts_id':id
+                                },function(D){
+                                    if(D.status){
+                                        list = D.data;
+                                        _this.add({list:list});
+                                    }
+                                },'json');
+                            }else{
+                                list = this.get(index).list;
                             }
-                        },1);
+                            System.listen(function(){
+                                if(list){
+                                    $('#address_content').html(System.Compiler.jQCompile($('#address_content_tpl').html(),{list:list,sortid:id}));
+                                    return true;
+                                }
+                            },1);
 
-                    });
-
-                }
-            },
-            created:function () {
-                var v = this;
-
-                $.get('/link-address/index',function(D){
-                    if(D.status){
-                        v.menu = D.data;
+                        });
 
                     }
-                },'json');
-            }
+                },
+                created:function () {
+                    var v = this;
+
+                    $.get('/link-address/index',function(D){
+                        if(D.status){
+                            v.menu = D.data;
+
+                        }
+                    },'json');
+                },
+                mounted:function () {
+                    var dom,$menu;
+                    System.listen(function(){
+                        $menu = $("#address_menu");
+                        dom = $menu.find("a[data-id='<?=$sorts_id?>']")[0];
+                        if(dom){
+                            dom.click();
+                            $menu[0].scrollTop = dom.offsetTop;
+                            return true;
+
+                        }
+
+                    },1);
+                }
 
 
+
+            });
         });
 
-    },100);
+
+    });
 
     <?php $this->endBlock(); ?>
 </script>
@@ -129,9 +153,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <% for(var i=0,len =list.length;i < len; i++){%>
     <button class="btn btn-info MB10" data-id="<%=list[i]['id']%>">
         <a href="<%=list[i]['url']%>" target="_blank"><%=list[i]['name']%></a>
-        <a href="/link-address/edit?id=<%=list[i]['id']%>" target="_blank">修改</a>
+        <a href="/link-address/edit?id=<%=list[i]['id']%>&sortid=<%=sortid%>" target="_blank">修改</a>
     </button>
     <% }%>
-    </template>
 </script>
 

@@ -8,13 +8,12 @@
 
 namespace backend\controllers;
 
-use common\models\Article;
+use common\models\{Article,ArticleForm};
 use yii;
 use yii\db\Query;
-use common\models\ArticleForm;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
+use yii\helpers\{ArrayHelper,Html};
+
 
 class ArticleController extends BaseController
 {

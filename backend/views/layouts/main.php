@@ -23,6 +23,11 @@ AppAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <script type="text/javascript">window._ROOT_ = '/';</script>
+    <script type="text/javascript" src="/js/config.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1/lamborghiniJS/LAM2/lamborghiniJS/base/System.js"></script>
+    <script type="text/javascript">LAM.bootstrap();</script>
+
     <?php $this->head() ?>
 </head>
 <body>
