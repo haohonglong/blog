@@ -21,7 +21,7 @@ class LinkAddress extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'linkAddress';
+        return 'linkaddress';
     }
 
     public static function findById($id)

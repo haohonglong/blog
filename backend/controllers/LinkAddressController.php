@@ -41,6 +41,7 @@ class LinkAddressController extends BaseController
         imagepng($image);                   //将图像以png的格式发送到浏览器
         imagedestroy($image);
     }
+
     public function actionIndex()
     {
 
@@ -153,7 +154,7 @@ class LinkAddressController extends BaseController
     public function actionRemove(){
         $request = yii::$app->request;
         if($request->isAjax){
-            if(LinkAddress::removeById($request->post('id'))){
+            if(LinkAddress::removeById($request->get('id'))){
                 $var = [
                     'status'=>1,
                 ];

@@ -13,9 +13,7 @@ use yii\db\Query;
 $this->title = '网页地址';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<script type="text/javascript">
 
-</script>
 <script type="text/javascript">
     <?php $this->beginBlock('js'); ?>
     LAM.run(function () {
@@ -25,13 +23,13 @@ $this->params['breadcrumbs'][] = $this->title;
             '/base/Cache.class',
             '/base/Storage.class'
         ], System.classPath);
-    });
-    LAM.run([jQuery],function ($) {
-        'use strict';
-        var System = this;
+
 
         var cache = new System.Cache('menu_11');
         $(function () {
+            System.listen(function (id) {
+                cg.innerHTML=new Date().toLocaleString();
+            },1000);
             $(document).on("click","#address_menu a",function () {
                 $("#address_menu a").removeAttr('style'," ");
                 $(this).css({
@@ -39,7 +37,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 });
 
             });
-            new Vue({
+
+            $(document).on("click","#address_content a[ref=del]",function () {
+                if(confirm("are you sure delete this?")){
+                    var id = $(this).data().id;
+                    var $button = $(this).parent('button');
+                    $.get('/link-address/remove',{'id':id},function(D){
+                        if(D.status){
+                            $button.remove();
+                        }else{
+                            alert('error');
+                        }
+                    },'json');
+                }
+
+
+            });
+
+            var vue =new Vue({
                 el: '#container',
                 data: {
                     menu:[],
@@ -47,9 +62,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     sortid:""
                 },
                 methods: {
-                    content: function (id,title) {
+                    content: function (id,title,index) {
                         this.sortid = id;
                         this.title = title;
+                        var dom = this.$refs.menu[index];
+                        $("#address_menu")[0].scrollTop = dom.offsetTop;
                         cache.find('m_id',id,function (index,id) {
                             var _this = this;
                             var list=null;
@@ -121,6 +138,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div id="container">
     <div class="row">
         <div class="col-md-7">
+
             <h3>{{title}}</h3>
         </div>
         <div class="col-md-5 text-right">
@@ -133,8 +151,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-md-3" id="address_menu">
             <div class="list-group">
                 <div v-if="menu.length">
-                    <template v-for="item in menu">
-                        <a href="javascript:void(0)" @click="content(item.id,item.name)" class="list-group-item"  :data-id="item.id" >{{item.name}}</a>
+                    <template v-for="(item, index) in menu">
+                        <a href="javascript:void(0);" @click="content(item.id,item.name,index)" ref="menu" class="list-group-item"  :data-id="item.id" >{{item.name}}</a>
                     </template>
                 </div>
                 <div v-else>
@@ -154,7 +172,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <button class="btn btn-info MB10" data-id="<%=list[i]['id']%>">
         <a href="<%=list[i]['url']%>" target="_blank"><%=list[i]['name']%></a>
         <a href="/link-address/edit?id=<%=list[i]['id']%>&sortid=<%=sortid%>" target="_blank">修改</a>
+        <a href="javascript:void(0);" ref="del" data-id="<%=list[i]['id']%>" >删除</a>
     </button>
     <% }%>
+
 </script>
+
+
 

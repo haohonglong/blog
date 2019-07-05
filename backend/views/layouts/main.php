@@ -29,6 +29,19 @@ AppAsset::register($this);
     <script type="text/javascript">LAM.bootstrap();</script>
 
     <?php $this->head() ?>
+    <script type="text/javascript">
+        <?php $this->beginBlock('js'); ?>
+        $(function () {
+            LAM.listen(function () {
+                cg.innerHTML=new Date().toLocaleString();
+            },1000);
+        });
+
+        <?php $this->endBlock(); ?>
+    </script>
+
+    <?php $this->registerJs($this->blocks['js'], \yii\web\View::POS_END); //将编写的js代码注册到页面底部  ?>
+
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -62,6 +75,7 @@ AppAsset::register($this);
             . Html::endForm()
             . '</li>';
     }
+    echo '<span style="color: #fff;position: relative;top:15px;">当前北京时间：<span id="cg"></span></span>';
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
