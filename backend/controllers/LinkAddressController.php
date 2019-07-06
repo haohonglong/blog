@@ -59,7 +59,7 @@ class LinkAddressController extends BaseController
                     'value' => $sorts_id,
                 ]));
                 Yii::$app->response->send();
-                $query = (new Query())->from('linkaddress');
+                $query = (new Query())->from(LinkAddress::tableName());
                 $content = $query->where(['sorts_id'=>$sorts_id])->all();
                 if($content){
                     $var = [
