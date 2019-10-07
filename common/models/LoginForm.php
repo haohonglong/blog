@@ -45,8 +45,8 @@ class LoginForm extends Model
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
             }else{
-                $sql = 'UPDATE user SET ip=:ip,udate=:udate WHERE id=:id';
-                Yii::$app->db->createCommand($sql,[':ip'=>Yii::$app->getRequest()->getUserIP(),':udate'=>date('Y-m-d H:i:s'),':id'=>$user->id])
+                $sql = 'UPDATE user SET ip=:ip,updated_at=:uptime WHERE id=:id';
+                Yii::$app->db->createCommand($sql,[':ip'=>Yii::$app->getRequest()->getUserIP(),':uptime'=>time(),':id'=>$user->id])
                     ->execute();
 //                $user->ip = Yii::$app->getRequest()->getUserIP();
 //                if(!$user->save()){

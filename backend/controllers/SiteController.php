@@ -1,7 +1,7 @@
 <?php
 namespace backend\controllers;
 
-use common\models\{User,RegisterFrom,LoginForm};
+use common\models\{User,SignupFrom,LoginForm};
 use yii;
 
 /**
@@ -58,21 +58,18 @@ class SiteController extends BaseController
         }
     }
 
-    public function actionRegister()
+    public function actionSignup()
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $model = new RegisterFrom();
+        $model = new SignupFrom();
         if ($model->load(Yii::$app->request->post()) && $model->register()) {
-            return $this->goBack();
-        } else {
-
-
-            return $this->render('reg', [
-                'model' => $model,
-            ]);
+            return $this->redirect('logout');
         }
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
 
     }
 

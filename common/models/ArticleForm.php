@@ -40,7 +40,7 @@ class ArticleForm extends Model
             }
             $article->udate = $date;
             if(!$article->save()){
-                $this->addError($article->getErrors());
+                $this->addErrors($article->getErrors());
             }
             return true;
         }
@@ -66,7 +66,7 @@ class ArticleForm extends Model
         }
         $article->is_show = '0';
         if(!$article->save()){
-            $this->addError($article->getErrors());
+            $this->addErrors($article->getErrors());
             return false;
         }
         return true;

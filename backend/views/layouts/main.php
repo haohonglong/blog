@@ -60,7 +60,8 @@ AppAsset::register($this);
         ['label' => yii::t('yii','Home'), 'url' => ['/site/index']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => yii::t('yii','Login'), 'url' => ['/site/login']];
+        $menuItems[] = ['label' => yii::t('app','Login'), 'url' => ['/site/login']];
+        $menuItems[] = ['label' => yii::t('app','Signup'), 'url' => ['/site/signup']];
     } else {
         $menuItems[] = ['label' => '文章列表', 'url' => ['/article/index']];
         $menuItems[] = ['label' => '视频列表', 'url' => ['/video/index']];

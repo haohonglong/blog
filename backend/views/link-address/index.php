@@ -27,9 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         var cache = new System.Cache('menu_11');
         $(function () {
-            System.listen(function (id) {
-                cg.innerHTML=new Date().toLocaleString();
-            },1000);
+
             $(document).on("click","#address_menu a",function () {
                 $("#address_menu a").removeAttr('style'," ");
                 $(this).css({

@@ -10,33 +10,43 @@ use yii\web\IdentityInterface;
 /**
  * User model
  *
- * @property integer $id
- * @property string $username
+ * @property int $id
+ * @property string $username 用户名
  * @property string $password
  * @property string $password_reset_token
- * @property string $email
- * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
+ * @property string $auth_key cookie验证auth_key
+ * @property string $email 用户邮箱
+ * @property string $avatar 用户头像url
+ * @property string $phone
+ * @property int $is_show 是否可见 默认是1 显示，0 ： 不显示
+ * @property string $ip 用bigint来记录inet_aton值 。最后一次登陆ip
+ * @property int $created_at 创建时间
+ * @property int $updated_at 最后修改时间
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
-    public $auth_key;
-    public $ip;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-
-            [['ip'], 'required'],
+            [['username', 'password', 'password_reset_token', 'auth_key', 'email', 'phone', 'created_at', 'updated_at'], 'required'],
+            [['created_at', 'updated_at'], 'integer'],
+            [['username', 'password', 'email', 'avatar', 'phone'], 'string', 'max' => 255],
+            ['email', 'email'],
+            [['password_reset_token'], 'string', 'max' => 100],
+            [['auth_key'], 'string', 'max' => 32],
+            [['is_show'], 'string', 'max' => 1],
             [['ip'], 'string', 'max' => 15],
+            [['password_reset_token'], 'unique'],
+            [['phone'], 'unique'],
+            [['auth_key'], 'unique'],
+            [['email'], 'unique'],
         ];
     }
     /**
@@ -85,6 +95,13 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne(['username' => $username]);
     }
+
+    public static function findByPhone($phone)
+    {
+        return static::findOne(['phone' => $phone]);
+    }
+
+
 
     /**
      * Finds user by password reset token
@@ -188,5 +205,26 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'username' => Yii::t('app', 'Username'),
+            'password' => Yii::t('app', 'Password'),
+            'password_reset_token' => Yii::t('app', 'Password Reset Token'),
+            'auth_key' => Yii::t('app', 'Auth Key'),
+            'email' => Yii::t('app', 'Email'),
+            'avatar' => Yii::t('app', 'Avatar'),
+            'phone' => Yii::t('app', 'Phone'),
+            'is_show' => Yii::t('app', 'Is Show'),
+            'ip' => Yii::t('app', 'Ip'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+        ];
     }
 }

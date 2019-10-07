@@ -17,6 +17,24 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '',
+  `username` varchar(255) NOT NULL COMMENT '用户名',
+  `password` varchar(255) NOT NULL COMMENT '',
+  `password_reset_token` varchar(100) NOT NULL UNIQUE COMMENT '',
+  `auth_key` varchar(32) NOT NULL UNIQUE COMMENT 'cookie验证auth_key',
+  `email` varchar(255) NOT NULL UNIQUE COMMENT '用户邮箱',
+  `avatar` varchar(255)  COMMENT '用户头像url',
+  `phone` varchar(255) NOT NULL UNIQUE COMMENT '注册手机号',
+  `is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否可见 默认是1 显示，0 ： 不显示',
+  `ip` varchar(15) NOT NULL DEFAULT '0' COMMENT '用bigint来记录inet_aton值 。最后一次登陆ip',
+  `created_at` int(11) NOT NULL COMMENT '创建时间',
+  `updated_at` int(11) NOT NULL COMMENT '最后修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户表';
+
+
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -66,8 +84,8 @@ CREATE TABLE `vote` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the vote table';
 
 
-DROP TABLE IF EXISTS `linkAddress`;
-CREATE TABLE IF NOT EXISTS `linkAddress` (
+DROP TABLE IF EXISTS `url`;
+CREATE TABLE IF NOT EXISTS `url` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `url` varchar(516) NOT NULL DEFAULT '',
@@ -76,8 +94,25 @@ CREATE TABLE IF NOT EXISTS `linkAddress` (
   `sorts_id` tinyint(3) unsigned NOT NULL COMMENT '当前信息属于哪个类别',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `news`;
+CREATE TABLE IF NOT EXISTS `news` (
+  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `img` varchar(255) NOT NULL DEFAULT '' COMMENT '资讯图片',
+  `author` varchar(100) NOT NULL,
+  `pv`  int(10) COMMENT '资讯访问量',
+  `content` text COMMENT '资讯内容',
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMMENT='资讯';
+
+
+
 insert into `blog`.`linkAddress` (name,url,info,date,sorts_id) (select name,url,info,date,sortsId from `management_of_system`.`video_addres`);
 ALTER TABLE linkAddress ADD CONSTRAINT SORTS_ID FOREIGN KEY (sorts_id) REFERENCES sorts(id);
+
+
 --============================================================================================
 --视频
 --============================================================================================
@@ -90,5 +125,28 @@ CREATE TABLE IF NOT EXISTS `video`(
 	`date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '',
 	PRIMARY KEY(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '存储视频表';
+
+-- https://www.rr33tt.com/mobile/list/1-0.html
+DROP TABLE IF EXISTS `rr33tt_title`;
+CREATE TABLE IF NOT EXISTS `rr33tt_title`(
+	`id`     	INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`title`  	VARCHAR(255) NOT NULL COMMENT '标题',
+	`href` 	VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'href',
+	`create_by` int NOT NULL COMMENT 'the created time',
+	PRIMARY KEY(`id`),
+	UNIQUE (`title`,`href`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '';
+
+DROP TABLE IF EXISTS `rr33tt_list`;
+CREATE TABLE IF NOT EXISTS `rr33tt_list`(
+	`id`     	INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`sid` INT UNSIGNED NOT NULL,
+	`title`  	VARCHAR(255) NOT NULL COMMENT '标题',
+	`href` 	VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'href',
+	`img` 	VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'img',
+	`create_by` int NOT NULL COMMENT 'the created time',
+	PRIMARY KEY(`id`),
+	UNIQUE (`href`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '';
 
 

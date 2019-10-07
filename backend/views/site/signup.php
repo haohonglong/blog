@@ -8,24 +8,25 @@ use yii\captcha\Captcha;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
+$this->title = Yii::t('app','Signup');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
 
     <div class="row">
         <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            <?php $form = ActiveForm::begin(['id' => 'login-form','options' => ['enctype' => 'multipart/form-data']]); ?>
 
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
+                <?= $form->field($model, 'phone')->textInput() ?>
+                <?= $form->field($model, 'email')->textInput() ?>
+                <?= $form->field($model, 'avatar')->fileInput() ?>
                 <?= $form->field($model, 'password')->passwordInput() ?>
                 <?= $form->field($model, 'password_repeat')->passwordInput() ?>
-                <?= $form->field($model,'captcha')->widget(yii\captcha\Captcha::className()
-                ,['captchaAction'=>'site/captcha',
+                <?= $form->field($model,'captcha')->widget(Captcha::className()
+                ,[
                     'imageOptions'=>['alt'=>'点击换图','title'=>'点击换图', 'style'=>'cursor:pointer']]);?>
 
                 <div class="form-group">
