@@ -75,6 +75,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     if(D.status){
                                         list = D.data;
                                         _this.add({list:list});
+                                    }else{
+                                        list = "没有数据";
                                     }
                                 },'json');
                             }else{
@@ -82,7 +84,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                             System.listen(function(){
                                 if(list){
-                                    $('#address_content').html(System.Compiler.jQCompile($('#address_content_tpl').html(),{list:list,sortid:id}));
+                                    if(System.isString(list)){
+                                        $('#address_content').html(list);
+                                    }else{
+                                        $('#address_content').html(System.Compiler.jQCompile($('#address_content_tpl').html(),{list:list,sortid:id}));
+                                    }
+
                                     return true;
                                 }
                             },1);
