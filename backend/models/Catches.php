@@ -8,7 +8,9 @@
 
 namespace backend\models;
 
+use yii;
 use QL\QueryList;
+
 
 class Catches
 {
@@ -23,11 +25,12 @@ class Catches
     public $jses = [];
     public function __construct($ori_url,$local_url)
     {
+        $local_url = Yii::getAlias('@sites').'/'.$local_url;
         $this->local_url = $local_url;
         $arr = pathinfo($local_url);
         $this->path = $arr['dirname'];
         $this->name = $arr['basename'];
-        $this->rel_path = str_replace(\Yii::getAlias('@backend/web/'),'/',$this->path);
+        $this->rel_path = str_replace(\Yii::getAlias('@backend/web'),'',$this->path);
         $this->content = $this->file_get($ori_url);
 
 
@@ -45,7 +48,8 @@ class Catches
             if($src){
                 $name = pathinfo($src)['basename'];
                 $content = $this->file_get($src);
-                $this->file_put($this->rel_path.'/'.$folder,$name,$content);
+                $this->replace($src,$this->rel_path.'/'.$folder.'/'.$name);
+                $this->file_put($this->path.'/'.$folder,$name,$content);
             }
         }
     }

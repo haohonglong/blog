@@ -89,7 +89,6 @@ class CatchController extends BaseController
         if($request->isPost){
             $url = $request->post('url');
             $path = $request->post('path');
-            $path = Yii::getAlias('@sites').'/'.$path;
             $catch = new Catches($url,$path);
             $catch
                 ->replace('../','https://www.layui.com/admin/std/dist/')
