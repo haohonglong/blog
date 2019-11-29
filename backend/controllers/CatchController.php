@@ -8,9 +8,9 @@
 
 namespace backend\controllers;
 
-use backend\models\CatchModel;
+use backend\models\Catches;
 use yii;
-use QL\QueryList;
+
 
 
 
@@ -89,13 +89,13 @@ class CatchController extends BaseController
         if($request->isPost){
             $url = $request->post('url');
             $path = $request->post('path');
-            $path = Yii::getAlias('@sites_tpl').'/'.$path;
-            $catch = new CatchModel($url,$path);
+            $path = Yii::getAlias('@sites').'/'.$path;
+            $catch = new Catches($url,$path);
             $catch
                 ->replace('../','https://www.layui.com/admin/std/dist/')
                 ->run()
-            ->replace('https://www.layui.com/admin/std/dist/layuiadmin/',$catch->rpath)
-                ->save();
+            ->replace('https://www.layui.com/admin/std/dist/layuiadmin/',$catch->rel_path)
+                ->saved();
             echo $catch->getContent();
             exit;
         }

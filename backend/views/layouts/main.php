@@ -63,6 +63,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => yii::t('app','Login'), 'url' => ['/site/login']];
         $menuItems[] = ['label' => yii::t('app','Signup'), 'url' => ['/site/signup']];
     } else {
+        $menuItems[] = ['label' => '抓取模版', 'url' => ['/catch/index']];
         $menuItems[] = ['label' => '文章列表', 'url' => ['/article/index']];
         $menuItems[] = ['label' => '视频列表', 'url' => ['/video/index']];
         $menuItems[] = ['label' => '网页地址', 'url' => ['/link-address/index']];

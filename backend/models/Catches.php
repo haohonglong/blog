@@ -8,61 +8,106 @@
 
 namespace backend\models;
 
+use QL\QueryList;
 
 class Catches
 {
 
-    public $ori_url = "";
     public $local_url = "";
+    public $path = "";
     public $abs_path = "";
-    public $rel_path = "";
-    public $content = "";
+    public $rel_path = "./";
+    private $content = "";
     public $name = "";
     public $csses = [];
     public $jses = [];
     public function __construct($ori_url,$local_url)
     {
-        $this->ori_url = $ori_url;
-
         $this->local_url = $local_url;
+        $arr = pathinfo($local_url);
+        $this->path = $arr['dirname'];
+        $this->name = $arr['basename'];
+        $this->rel_path = str_replace(\Yii::getAlias('@backend/web/'),'/',$this->path);
         $this->content = $this->file_get($ori_url);
 
 
     }
-    public function assets($path,$attrs)
+    public function assets($folder,$attrs)
     {
 
-//然后可以把页面源码或者HTML片段传给QueryList
         $data = QueryList::html($this->content)->rules([  //设置采集规则
             // 采集所有a标签的href属性
             'link' => $attrs
-        ])->query()->getData();
-//打印结果
-        print_r($data->all());
+        ])->query()->getData()->all();
+
+        foreach ($data as $v){
+            $src = $v['link'];
+            if($src){
+                $name = pathinfo($src)['basename'];
+                $content = $this->file_get($src);
+                $this->file_put($this->rel_path.'/'.$folder,$name,$content);
+            }
+        }
     }
     public function css()
     {
-        $this->assets('',['link','href']);
+        $this->assets('css',['link','href']);
+        return $this;
     }
     public function js()
-    {}
+    {
+        $this->assets('js',['script','src']);
+        return $this;
+    }
     public function image()
+    {
+        $this->assets('images',['img','src']);
+        return $this;
+    }
+
+    public function replace($search, $replace)
+    {
+        $this->content = str_replace($search, $replace, $this->content);
+        return $this;
+    }
+    public function init()
     {
 
     }
-    public function init()
-    {}
     public function run()
     {
+        $this->css()->js()->image();
+        return $this;
 
     }
     public function file_get($url)
     {
         return file_get_contents($url);
     }
-    public function file_put($url,$content)
+    public function file_put($path,$name,$content)
     {
-        file_put_contents($url,$content);
+        $this->create($path);
+        file_put_contents($path.'/'.$name,$content);
+    }
+    private function create($path)
+    {
+        if(!is_dir($path)){
+            $res=mkdir(iconv("UTF-8", "GBK", $path),0777,true);
+            if (!$res){
+                echo "目录 $path 创建失败";
+                exit;
+            }
+        }
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function saved()
+    {
+        $this->file_put($this->path,$this->name,$this->content);
     }
 
 }
