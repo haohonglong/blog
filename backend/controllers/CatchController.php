@@ -8,6 +8,7 @@
 
 namespace backend\controllers;
 
+use backend\models\CatchModel;
 use yii;
 use QL\QueryList;
 
@@ -17,7 +18,7 @@ class CatchController extends BaseController
 {
 
 
-    public function actionIndex()
+    public function actionIndex_()
     {
 
 
@@ -78,6 +79,30 @@ class CatchController extends BaseController
 // 4. 释放curl句柄
         curl_close($ch);
         return $output;
+
+    }
+
+    public function actionIndex()
+    {
+
+        $request = Yii::$app->request;
+        if($request->isPost){
+            $url = $request->post('url');
+            $path = $request->post('path');
+            $path = Yii::getAlias('@sites_tpl').'/'.$path;
+            $catch = new CatchModel($url,$path);
+            $catch
+                ->replace('../','https://www.layui.com/admin/std/dist/')
+                ->run()
+            ->replace('https://www.layui.com/admin/std/dist/layuiadmin/',$catch->rpath)
+                ->save();
+            echo $catch->getContent();
+            exit;
+        }
+
+        return $this->render('index');
+
+
 
     }
 
