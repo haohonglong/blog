@@ -94,9 +94,12 @@ class CatchController extends BaseController
             $search = $request->post('search');
 
             $catch = new Catches($url,$path);
-            foreach ($search as $k => $v){
-                $catch->replace($search[$k],$replace[$k]);
+            if(isset($search) && !empty($search)){
+                foreach ($search as $k => $v){
+                    $catch->replace($search[$k],$replace[$k]);
+                }
             }
+
             $catch->run();
             if($root != 'null'){
                 $catch->replace($root,$catch->rel_path);
