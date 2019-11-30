@@ -50,12 +50,13 @@ class Catches
                 $content = $this->file_get($src);
                 $this->replace($src,$this->rel_path.'/'.$folder.'/'.$name);
                 $this->file_put($this->path.'/'.$folder,$name,$content);
+                $path = $this->path.'/'.$folder.'/'.$name;
                 switch ($folder){
                     case 'css':
-                        $this->csses[] = $this->path.'/'.$folder.'/'.$name;
+                        $this->csses[] = $path;
                         break;
                     case 'js':
-                        $this->jses[] = $this->path.'/'.$folder.'/'.$name;
+                        $this->jses[] = $path;
                         break;
 
                 }
