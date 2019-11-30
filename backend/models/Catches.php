@@ -45,7 +45,7 @@ class Catches
 
         foreach ($data as $v){
             $src = $v['link'];
-            if($src){
+            if(isset($src) && !empty($src)){
                 $name = pathinfo($src)['basename'];
                 $content = $this->file_get($src);
                 $this->replace($src,$this->rel_path.'/'.$folder.'/'.$name);
@@ -86,12 +86,12 @@ class Catches
     }
     public function file_get($url)
     {
-        return file_get_contents($url);
+        return @file_get_contents($url);
     }
     public function file_put($path,$name,$content)
     {
         $this->create($path);
-        file_put_contents($path.'/'.$name,$content);
+        @file_put_contents($path.'/'.$name,$content);
     }
     private function create($path)
     {
