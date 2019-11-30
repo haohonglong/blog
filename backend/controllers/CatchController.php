@@ -87,14 +87,21 @@ class CatchController extends BaseController
 
         $request = Yii::$app->request;
         if($request->isPost){
+            $root = $request->post('root');
             $url = $request->post('url');
             $path = $request->post('path');
+            $replace = $request->post('replace');
+            $search = $request->post('search');
+
             $catch = new Catches($url,$path);
-            $catch
-                ->replace('../','https://www.layui.com/admin/std/dist/')
-                ->run()
-            ->replace('https://www.layui.com/admin/std/dist/layuiadmin/',$catch->rel_path)
-                ->saved();
+            foreach ($search as $k => $v){
+                $catch->replace($search[$k],$replace[$k]);
+            }
+            $catch->run();
+            if($root != 'null'){
+                $catch->replace($root,$catch->rel_path);
+            }
+            $catch->saved();
             echo $catch->getContent();
             exit;
         }

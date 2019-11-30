@@ -32,6 +32,7 @@ class Catches
         $this->name = $arr['basename'];
         $this->rel_path = str_replace(\Yii::getAlias('@backend/web'),'',$this->path);
         $this->content = $this->file_get($ori_url);
+        $this->content = trim($this->content);
 
 
     }
@@ -121,7 +122,7 @@ class Catches
 
     public function saved()
     {
-        $this->file_put($this->path,$this->name,$this->content);
+        $this->file_put($this->path,$this->name,trim($this->content));
     }
 
 }
