@@ -25,6 +25,7 @@ class Catches
     public $jses = [];
     public function __construct($ori_url,$local_url)
     {
+        
         $local_url = Yii::getAlias('@sites').'/'.$local_url;
         $this->local_url = $local_url;
         $arr = pathinfo($local_url);
@@ -33,8 +34,25 @@ class Catches
         $this->rel_path = str_replace(\Yii::getAlias('@backend/web'),'',$this->path);
         $this->content = $this->file_get($ori_url);
         $this->content = trim($this->content);
-
-
+        $this->rrmdir($this->path);
+    }
+    
+    private function rrmdir($src) {
+        if (file_exists($src)) {
+            $dir = opendir($src);
+            while (false !== ($file = readdir($dir))) {
+                if (($file != '.') && ($file != '..')) {
+                    $full = $src . '/' . $file;
+                    if (is_dir($full)) {
+                        $this->rrmdir($full);
+                    } else {
+                        unlink($full);
+                    }
+                }
+            }
+            closedir($dir);
+            rmdir($src);
+        }
     }
     public function assets($folder,$attrs)
     {

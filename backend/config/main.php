@@ -74,6 +74,15 @@ return [
             'showScriptName'=>false,
             'baseUrl' => 'http://blog.local',
         ],
+        'view' => [
+            'theme' => [
+                'basePath' => '@backend/themes/basic/web',
+                'baseUrl' => '@backend/themes/basic',
+                'pathMap' => [
+                    '@backend/views' => '@backend/themes/basic/views',
+                ],
+            ],
+        ],
 
 
     ],
