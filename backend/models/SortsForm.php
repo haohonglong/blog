@@ -14,14 +14,14 @@ use yii\base\Model;
 class SortsForm extends Model
 {
 
-    public $id,$name;
+    public $id,$pid,$name;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name','pid'], 'required'],
             [['name'], 'string', 'max' => 11],
         ];
     }
@@ -30,6 +30,7 @@ class SortsForm extends Model
     {
         if($this->validate()){
             $sorts = new Sorts();
+            $sorts->pid = $this->pid;
             $sorts->name = $this->name;
             if(!$sorts->save()){
                 $this->addError($sorts->getErrors());
@@ -50,6 +51,7 @@ class SortsForm extends Model
     {
         return [
             'id' => 'ID',
+            'pid' => '父级id',
             'name' => '名称',
         ];
     }

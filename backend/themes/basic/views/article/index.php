@@ -12,6 +12,8 @@ use yii\widgets\ActiveForm;
 
 $this->title = '文章列表';
 $this->params['breadcrumbs'][] = $this->title;
+
+
 ?>
 
 
@@ -34,6 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'tableOptions'=>['class'=>'table table-striped table-bordered table-hover'],
+    'pager'=>[
+        'class' => 'backend\themes\basic\widgets\LinkPager',
+    ],
     'columns' => [
        'id',
         [

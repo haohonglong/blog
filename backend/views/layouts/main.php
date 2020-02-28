@@ -25,7 +25,7 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <script type="text/javascript">window._ROOT_ = '/';</script>
     <script type="text/javascript" src="/js/config.js"></script>
-    <script type="text/javascript" src="http://127.0.0.1/lamborghiniJS/LAM2/lamborghiniJS/base/System.js"></script>
+    <script type="text/javascript" src="http://lam2.core/base/System.js"></script>
     <script type="text/javascript">LAM.bootstrap();</script>
 
     <?php $this->head() ?>
@@ -64,6 +64,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => yii::t('app','Signup'), 'url' => ['/site/signup']];
     } else {
         $menuItems[] = ['label' => '抓取模版', 'url' => ['/catch/index']];
+        $menuItems[] = ['label' => '商品', 'url' => ['/goods/index']];
         $menuItems[] = ['label' => '文章列表', 'url' => ['/article/index']];
         $menuItems[] = ['label' => '视频列表', 'url' => ['/video/index']];
         $menuItems[] = ['label' => '网页地址', 'url' => ['/link-address/index']];

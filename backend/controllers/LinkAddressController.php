@@ -9,7 +9,7 @@
 namespace backend\controllers;
 
 use yii;
-use common\models\{LinkAddress,LinkAddressForm};
+use common\models\{LinkAddress};
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -47,10 +47,14 @@ class LinkAddressController extends BaseController
 
         $keyword = trim(Yii::$app->request->get('keyword'));
 
+//        $posts = Yii::$app->db->createCommand('select id,name,sorts_id from url where sorts_id in(select id from sorts where id =1)')
+//            ->queryAll();
+//        print_r($posts);
+//        exit;
+
         if(Yii::$app->request->isAjax){
 
             $sorts_id = Yii::$app->request->get('sorts_id');
-
 
             if(isset($sorts_id)){
                 $cookies = Yii::$app->response->cookies;
@@ -105,26 +109,25 @@ class LinkAddressController extends BaseController
     {
 
         $sortid = yii::$app->request->get('sortid');
-        $linkAddress = LinkAddress::findById($id);
-        if(!$linkAddress){
-            $linkAddress = new LinkAddress();
+        $model = LinkAddress::findById($id);
+        if(!$model){
+            $model = new LinkAddress();
         }
-        $model = new LinkAddressForm();
-        if ($model->load(Yii::$app->request->post(),'LinkAddress')) {
-            $model->model = $linkAddress;
-            if($model->save()){
+        if ($model->load(Yii::$app->request->post())) {
+            $model->sorts_id = isset($model->sorts_id) ? $model->sorts_id : 0;
+            $model->date = date('Y-m-d H:i:s');
+            if($model->validate() && $model->save()){
                 return $this->redirect(['/link-address/index']);
 
             }
-        } else {
-            $sort = (new Query())->from('sorts')->select('id,name')->all();
-            $sorts = ArrayHelper::map($sort,'id','name');
-            return $this->render('edit', [
-                'model' => $linkAddress,
-                'sorts' => $sorts,
-                'sortid' => $sortid,
-            ]);
         }
+        $sort = (new Query())->from('sorts')->select('id,name')->all();
+        $sorts = ArrayHelper::map($sort,'id','name');
+        return $this->render('edit', [
+            'model' => $model,
+            'sorts' => $sorts,
+            'sortid' => $sortid,
+        ]);
     }
 
     /**

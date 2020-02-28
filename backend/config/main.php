@@ -14,11 +14,11 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [
-        'shop' => [
-            'class' => 'app\modules\shop\Module',
-        ],
-    ],
+//    'modules' => [
+//        'shop' => [
+//            'class' => 'app\modules\shop\Module',
+//        ],
+//    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -76,10 +76,10 @@ return [
         ],
         'view' => [
             'theme' => [
-                'basePath' => '@backend/themes/basic/web',
-                'baseUrl' => '@backend/themes/basic',
+//                'basePath' => '@themes_static/basic',
+                'baseUrl' => '@themes_static/basic',
                 'pathMap' => [
-                    '@backend/views' => '@backend/themes/basic/views',
+                    '@backend/views' => '@themes/basic/views_',
                 ],
             ],
         ],

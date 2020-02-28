@@ -29,7 +29,7 @@ class BaseController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index','add','edit','view','remove'],
+                        'actions' => ['logout', 'index','add','edit','view','remove','re-sort'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

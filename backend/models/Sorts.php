@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "sorts".
  *
  * @property int $id
+ * @property int $pid
  * @property string $name the name of sort
  */
 class Sorts extends \yii\db\ActiveRecord
@@ -26,7 +27,7 @@ class Sorts extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name','pid'], 'required'],
             [['name'], 'string', 'max' => 11],
         ];
     }

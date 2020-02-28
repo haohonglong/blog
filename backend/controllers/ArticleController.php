@@ -89,7 +89,7 @@ class ArticleController extends BaseController
             $form->attributes = Yii::$app->request->post('Article');
             $form->model = $model;
             if($form->save()){
-                return $this->goBack();
+                return $this->redirect(['article/view','id'=>$id]);
             }
 
         }

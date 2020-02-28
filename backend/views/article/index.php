@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a("修改", $url );
                 },
                 "remove" => function ($url) {
-                    return Html::a("删除", $url );
+                    return Html::a("删除", $url ,["onclick"=>"return confirm('Are you sure you want to delete this?')"]);
                 },
 
 

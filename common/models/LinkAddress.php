@@ -49,12 +49,13 @@ class LinkAddress extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'info', 'sorts_id'], 'required'],
+            [['name', 'info', 'sorts_id','url'], 'required'],
             [['date'], 'safe'],
             [['sorts_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['url'], 'string', 'max' => 516],
-            [['info'], 'string', 'max' => 2000],
+            [['url'], 'string', 'max' => 1024],
+            [['info'], 'string'],
+            [['url'], 'unique','message'=>'url已存在了'],
         ];
     }
 

@@ -23,8 +23,9 @@ class LinkAddressForm extends Model
             [['name', 'info', 'sorts_id'], 'required'],
             [['sorts_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['url'], 'string', 'max' => 516],
-            [['info'], 'string', 'max' => 2000],
+            [['url'], 'string', 'max' => 1024],
+            [['info'], 'string'],
+
         ];
     }
     

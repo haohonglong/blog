@@ -68,6 +68,7 @@ ALTER TABLE posts ADD CONSTRAINT KF_ID FOREIGN KEY (article_id) REFERENCES artic
 DROP TABLE IF EXISTS `sorts`;
 CREATE TABLE `sorts` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `pid` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT 'the parent id of sorts',
   `name` VARCHAR(11)  NOT NULL COMMENT 'the name of sort',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the sort table';
@@ -89,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `url` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `url` varchar(516) NOT NULL DEFAULT '',
-  `info` varchar(2000) NOT NULL,
+  `info` text NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time ',
   `sorts_id` tinyint(3) unsigned NOT NULL COMMENT '当前信息属于哪个类别',
   PRIMARY KEY (`id`)
@@ -149,4 +150,25 @@ CREATE TABLE IF NOT EXISTS `rr33tt_list`(
 	UNIQUE (`href`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '';
 
+DROP TABLE IF EXISTS `shop`;
+CREATE TABLE IF NOT EXISTS `shop`(
+	`id`     	INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`name`  	VARCHAR(255) NOT NULL COMMENT '商店名称',
+	PRIMARY KEY(`id`),
+	UNIQUE (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '商店';
 
+DROP TABLE IF EXISTS `shop_list`;
+CREATE TABLE IF NOT EXISTS `shop_list`(
+	`id`     	INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`uid`     INT UNSIGNED NOT NULL,
+	`shop_id` INT UNSIGNED NOT NULL COMMENT '超市名称',
+	`name`  	VARCHAR(255) NOT NULL COMMENT '名称',
+	`number`  	INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '数量',
+	`weight` INT UNSIGNED NOT NULL COMMENT '重量',
+	`single_price` DECIMAL(5,2) NOT NULL COMMENT '单价',
+	`final_price` DECIMAL(5,2) NOT NULL COMMENT '结算价格',
+	`create_by` int NOT NULL COMMENT '',
+	`update_by` int NOT NULL COMMENT '',
+	PRIMARY KEY(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '购物清单';

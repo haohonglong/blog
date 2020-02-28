@@ -34,4 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-
+<div class="row MB10">
+    <div class="col-md-12 text-right">
+        <a href="<?=Url::to(['/article/edit','id'=>$article['id']])?>" class="btn btn-primary btn-sm active" role="button">编辑</a>
+    </div>
+</div>
