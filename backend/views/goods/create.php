@@ -14,7 +14,7 @@ DatePackerAsset::register($this);
 /* @var $model backend\models\Goods */
 
 $this->title = Yii::t('app', '添加商品');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Shop Lists'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', '商品列表'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <script type="text/javascript">
@@ -40,6 +40,8 @@ $this->params['breadcrumbs'][] = $this->title;
         $row = $(this).closest('.row');
         $(this).val($('.single_price',$row).val() * $('.number',$row).val());
     });
+
+
     <?php $this->endBlock();?>
 </script>
 <?php $this->registerJs($this->blocks['js']);?>
@@ -56,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::a('添加商店', ['shop/create'], ['class' => 'btn btn-success','style'=>'margin-top:25px;']) ?>
                 </div>
                 <div class="col-sm-2">
-                    <?= $form->field($model, 'shop_id')->dropdownList($shops,['prompt'=>'选择商店名称']); ?>
+                    <?= $form->field($model, 'shop_id')->dropdownList($shops,['prompt'=>'选择商店名称'])->label('超市名称'); ?>
                 </div>
                 <div class="col-sm-2">
                     <?= $form->field($model, 'create_by')->textInput(['data-provide'=>'datepicker']) ?>

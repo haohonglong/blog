@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php  //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('app', '添加商品'), ['create'], ['class' => 'btn btn-success']) ?>
@@ -29,7 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'user.username',
-            'shop.name',
+            [
+                'label'=>'超市名称',
+                'attribute' => 'shop_name',
+                'value' => 'shop.name',
+            ],
             'name',
             'number',
             'weight',
@@ -40,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
+        'caption'=>"实际消费总计 : {$totalPrice}"
     ]); ?>
     <?php Pjax::end(); ?>
 </div>

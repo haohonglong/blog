@@ -17,16 +17,16 @@ use yii\widgets\ActiveForm;
             'data-pjax' => 1
         ],
     ]); ?>
+    <div class="row">
+        <div class="form-group">
+            <div class="col-sm-1"><?= $form->field($model, 'id') ?></div>
+            <div class="col-sm-3"><?= $form->field($model, 'shop[name]') ?></div>
+            <div class="col-sm-3"><?= $form->field($model, 'name') ?></div>
+            <div class="col-sm-1"><?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary','style'=>'margin-top:25px;']) ?></div>
+            <div class="col-sm-1"><?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default','style'=>'margin-top:25px;']) ?></div>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'id') ?>
-
-    <?= $form->field($model, 'uid') ?>
-
-    <?= $form->field($model, 'shop_id') ?>
-
-    <?= $form->field($model, 'name') ?>
-
-    <?= $form->field($model, 'number') ?>
 
     <?php // echo $form->field($model, 'weight') ?>
 
@@ -38,10 +38,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'update_by') ?>
 
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
-    </div>
+
 
     <?php ActiveForm::end(); ?>
 

@@ -11,6 +11,8 @@ use backend\models\Goods;
  */
 class GoodsSearch extends Goods
 {
+
+    public $shop_name;
     /**
      * {@inheritdoc}
      */
@@ -18,7 +20,7 @@ class GoodsSearch extends Goods
     {
         return [
             [['id', 'uid', 'shop_id', 'number', 'weight', 'create_by', 'update_by'], 'integer'],
-            [['name'], 'safe'],
+            [['name','shop_name'], 'safe'],
             [['single_price', 'final_price'], 'number'],
         ];
     }
@@ -42,16 +44,14 @@ class GoodsSearch extends Goods
     public function search($params)
     {
         $query = Goods::find();
-
-        // add conditions that should always apply here
+        $query->joinWith(['shop']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $this->load($params);
 
-        if (!$this->validate()) {
+        if ($this->load($params) && !$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
@@ -61,7 +61,6 @@ class GoodsSearch extends Goods
         $query->andFilterWhere([
             'id' => $this->id,
             'uid' => $this->uid,
-            'shop_id' => $this->shop_id,
             'number' => $this->number,
             'weight' => $this->weight,
             'single_price' => $this->single_price,
@@ -72,8 +71,8 @@ class GoodsSearch extends Goods
 
 
 
-
-        $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'goods.name', $this->name]);
+        $query->andFilterWhere(['like', 'shop.name', $this->shop_name]);
 
         foreach ($dataProvider->getModels() as $item){
             $item->create_by = date('Y-m-d',$item->create_by);

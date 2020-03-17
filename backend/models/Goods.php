@@ -21,6 +21,8 @@ use Yii;
  */
 class Goods extends \yii\db\ActiveRecord
 {
+
+
     /**
      * {@inheritdoc}
      */
@@ -43,6 +45,20 @@ class Goods extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function totalPrices()
+    {
+        $prices = 0;
+        $total = static::find()
+            ->select('final_price')
+            ->all();
+        foreach ($total as $item){
+            $prices += floatval($item->final_price);
+        }
+        return $prices;
+
+
+    }
+
 
 
     /**
@@ -53,8 +69,9 @@ class Goods extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'uid' => Yii::t('app', 'Uid'),
+            'shop' => Yii::t('app', '超市名称'),
             'shop_id' => Yii::t('app', '超市id'),
-            'name' => Yii::t('app', '名称'),
+            'name' => Yii::t('app', '商品名称'),
             'number' => Yii::t('app', '数量'),
             'weight' => Yii::t('app', '重量'),
             'single_price' => Yii::t('app', '单价'),

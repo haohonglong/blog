@@ -37,10 +37,12 @@ class GoodsController extends Controller
     public function actionIndex()
     {
         $searchModel = new GoodsSearch();
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalPrice' => Goods::totalPrices(),
         ]);
     }
 
@@ -115,8 +117,13 @@ class GoodsController extends Controller
         $model = $this->findModel($id);
         $model->create_by = date('Y-m-d',$model->create_by);
         $model->update_by = date('Y-m-d',$model->update_by);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->create_by = strtotime($model->create_by);
+            $model->update_by = strtotime($model->update_by);
+            if($model->save()){
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
         }
 
         return $this->render('update', [

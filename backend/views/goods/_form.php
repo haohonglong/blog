@@ -34,7 +34,7 @@ DatePackerAsset::register($this);
                 <?= Html::a('添加商店', ['shop/create'], ['class' => 'btn btn-success','style'=>'margin-top:25px;']) ?>
             </div>
             <div class="col-sm-2">
-                <?= $form->field($model, 'shop_id')->dropdownList($shops,['prompt'=>'选择商店名称']); ?>
+                <?= $form->field($model, 'shop_id')->dropdownList($shops,['prompt'=>'选择商店名称'])->label("超市名称"); ?>
             </div>
             <div class="col-sm-2">
                 <?= $form->field($model, 'create_by')->textInput(['data-provide'=>'datepicker']) ?>
