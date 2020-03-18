@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
-        'caption'=>"实际消费总计 : {$totalPrice}"
+        'caption'=>"当前可见页面实际消费总计 : {$curTotalPrice} <br/> 实际消费总计 : {$totalPrice}"
     ]); ?>
     <?php Pjax::end(); ?>
 </div>

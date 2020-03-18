@@ -6,6 +6,7 @@ use backend\models\Shop;
 use Yii;
 use backend\models\Goods;
 use backend\models\GoodsSearch;
+use yii\db\Query;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,12 +38,13 @@ class GoodsController extends Controller
     public function actionIndex()
     {
         $searchModel = new GoodsSearch();
-
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'totalPrice' => Goods::totalPrices(),
+            'curTotalPrice' => GoodsSearch::currentTotalPrices($dataProvider),
         ]);
     }
 
@@ -76,24 +78,34 @@ class GoodsController extends Controller
             $model->create_by = strtotime($model->create_by);
             $model->update_by = strtotime($model->update_by);
             if(is_array($model->name)){
+                $data = [];
                 foreach ($model->name as $i => $item){
-                    $model2 = new Goods();
-                    $model2->uid = $model->uid;
-                    $model2->shop_id = $model->shop_id;
-                    $model2->create_by = $model->create_by;
-                    $model2->update_by = $model->update_by;
-                    $model2->name = $model->name[$i];
-                    $model2->number = $model->number[$i];
-                    $model2->weight = $model->weight[$i];
-                    $model2->single_price = $model->single_price[$i];
-                    $model2->final_price = $model->final_price[$i];
-                    $model2->save();
+                    $data[$i]['uid']            = $model->uid;
+                    $data[$i]['shop_id']        = $model->shop_id;
+                    $data[$i]['create_by']      = $model->create_by;
+                    $data[$i]['update_by']      = $model->update_by;
+                    $data[$i]['name']           = $model->name[$i];
+                    $data[$i]['number']         = $model->number[$i];
+                    $data[$i]['weight']         = $model->weight[$i];
+                    $data[$i]['single_price']   = $model->single_price[$i];
+                    $data[$i]['final_price']    = $model->final_price[$i];
                 }
+                Yii::$app->db->transaction(function($db) use($data) {
+                    $db->createCommand()->batchInsert('goods', [
+                        'uid',
+                        'shop_id',
+                        'create_by',
+                        'update_by',
+                        'name',
+                        'number',
+                        'weight',
+                        'single_price',
+                        'final_price'
+                    ], $data)->execute();
 
+                });
             }else{
-                if($model->save()){
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
+                $model->save();
             }
 
 
@@ -133,14 +145,59 @@ class GoodsController extends Controller
     }
 
     /**
+     * @author: lhh
+     * 创建日期：2020-03-18
+     * 修改日期：2020-03-18
+     * 名称： del
+     * 功能：删除冗余的数据
+     * 说明：
+     * 注意：
+     * @throws \yii\db\Exception
+     *
+     */
+    private function del()
+    {
+        $ids = [];
+        $rows = (new \yii\db\Query())
+            ->from(Goods::tableName())
+            ->all();
+
+        foreach ($rows as $k1 => $v1){
+            $total = 0;
+            foreach ($rows as $k2 => $v2){
+                if($v1['name'] == $v2['name'] && $v1['create_by'] == $v2['create_by'] && $v1['final_price'] == $v2['final_price']){
+                    if($total > 0){
+                        if(!in_array($v2['id'],$ids)){
+                            $ids[] = $v2['id'];
+                        }
+
+                    }
+                    $total++;
+
+                }
+            }
+        }
+
+        if(!empty($ids)){
+            $ids = implode(',',$ids);
+            Yii::$app->db->createCommand()->delete(Goods::tableName(),"id in({$ids})")->execute();;
+        }
+
+
+
+    }
+
+    /**
      * Deletes an existing ShopList model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id=null)
     {
+//        $this->del();
+//        exit;
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

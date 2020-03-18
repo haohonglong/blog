@@ -27,6 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
     });
     var html = $('#templ_goods').html();
     var $goods_div = $('#goods_div');
+    var $total = $('#total');
+    var total = 0;
     $('#addition_goods').on('click',function() {
         $goods_div.append(html);
     });
@@ -38,7 +40,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     $(document).on('click','.final_price',function() {
         $row = $(this).closest('.row');
-        $(this).val($('.single_price',$row).val() * $('.number',$row).val());
+        var price = $('.single_price',$row).val() * $('.number',$row).val() * $('.weight',$row).val();
+        price = parseFloat(price).toFixed(2);
+        total = parseFloat(total);
+        price = parseFloat(price);
+        total += price;
+        $(this).val(price);
+        $total.text(total);
     });
 
 
@@ -77,10 +85,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="form-group">
                     <div class="col-sm-2"><?= $form->field($model, 'name[]')->textInput(['maxlength' => true]) ?></div>
                     <div class="col-sm-1"><?= $form->field($model, 'number[]')->textInput(['value'=>1,'class'=>'form-control number']) ?></div>
-                    <div class="col-sm-1"><?= $form->field($model, 'weight[]')->textInput() ?></div>
+                    <div class="col-sm-1"><?= $form->field($model, 'weight[]')->textInput(['value'=>1,'class'=>'form-control weight']) ?></div>
                     <div class="col-sm-1"><?= $form->field($model, 'single_price[]')->textInput(['maxlength' => true,'class'=>'form-control single_price']) ?></div>
                     <div class="col-sm-1"><?= $form->field($model, 'final_price[]')->textInput(['maxlength' => true,'class'=>'form-control final_price']) ?></div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                总金额: <span id="total">0.00</span>
             </div>
         </div>
 
@@ -104,7 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div></div>
                 <div class="col-sm-1"><div class="form-group field-goods-weight required">
                         <label class="control-label" for="goods-weight">重量</label>
-                        <input type="text" id="goods-weight" class="form-control" name="Goods[weight][]">
+                        <input type="text" id="goods-weight" class="form-control weight" name="Goods[weight][]" value="1">
 
                         <div class="help-block"></div>
                     </div></div>

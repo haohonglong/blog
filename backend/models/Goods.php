@@ -45,6 +45,16 @@ class Goods extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @author: lhh
+     * 创建日期：2020-03-18
+     * 修改日期：2020-03-18
+     * 名称： totalPrices
+     * 功能：计算商品总额
+     * 说明：
+     * 注意：
+     * @return float|int
+     */
     public static function totalPrices()
     {
         $prices = 0;
@@ -55,8 +65,6 @@ class Goods extends \yii\db\ActiveRecord
             $prices += floatval($item->final_price);
         }
         return $prices;
-
-
     }
 
 

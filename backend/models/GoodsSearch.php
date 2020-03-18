@@ -35,6 +35,26 @@ class GoodsSearch extends Goods
     }
 
     /**
+     * @author: lhh
+     * 创建日期：2020-03-18
+     * 修改日期：2020-03-18
+     * 名称： currentTotalPrices
+     * 功能：获取当前页面商品价格总额
+     * 说明：
+     * 注意：
+     * @param $dataProvider
+     * @return float|int
+     */
+    public static function currentTotalPrices($dataProvider)
+    {
+        $prices = 0;
+        foreach ($dataProvider->getModels() as $item){
+            $prices += floatval($item->final_price);
+        }
+        return $prices;
+    }
+
+    /**
      * Creates data provider instance with search query applied
      *
      * @param array $params
@@ -71,7 +91,7 @@ class GoodsSearch extends Goods
 
 
 
-        $query->andFilterWhere(['like', 'goods.name', $this->name]);
+        $query->andFilterWhere(['like',  Goods::tableName().".name", $this->name]);
         $query->andFilterWhere(['like', 'shop.name', $this->shop_name]);
 
         foreach ($dataProvider->getModels() as $item){
