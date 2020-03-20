@@ -71,10 +71,17 @@ class GoodsSearch extends Goods
         ]);
 
 
-        if ($this->load($params) && !$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
+
+        if ($this->load($params)) {
+            $this->create_by = !empty($this->create_by) ? strtotime($this->create_by) : '';
+            $this->update_by = !empty($this->update_by) ? strtotime($this->update_by) : '';
+
+            if(!$this->validate()){
+                // uncomment the following line if you do not want to return any records when validation fails
+                // $query->where('0=1');
+                return $dataProvider;
+            }
+
         }
 
         // grid filtering conditions

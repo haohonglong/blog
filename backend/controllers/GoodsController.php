@@ -40,6 +40,9 @@ class GoodsController extends Controller
         $searchModel = new GoodsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $searchModel->create_by = !empty($searchModel->create_by) ? date('Y-m-d',$searchModel->create_by) : '';
+        $searchModel->update_by = !empty($searchModel->update_by) ? date('Y-m-d',$searchModel->update_by) : '';
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -111,6 +114,9 @@ class GoodsController extends Controller
 
         }
 
+        $model->create_by = !empty($model->create_by) ? date('Y-m-d',$model->create_by) : '';
+        $model->update_by = !empty($model->update_by) ? date('Y-m-d',$model->update_by) : '';
+
         return $this->render('create', [
             'model' => $model,
             'shops' => Shop::getAll(),
@@ -166,11 +172,8 @@ class GoodsController extends Controller
             $total = 0;
             foreach ($rows as $k2 => $v2){
                 if($v1['name'] == $v2['name'] && $v1['create_by'] == $v2['create_by'] && $v1['final_price'] == $v2['final_price']){
-                    if($total > 0){
-                        if(!in_array($v2['id'],$ids)){
-                            $ids[] = $v2['id'];
-                        }
-
+                    if($total > 0 && !in_array($v2['id'],$ids)){
+                        $ids[] = $v2['id'];
                     }
                     $total++;
 
