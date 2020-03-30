@@ -158,17 +158,29 @@ CREATE TABLE IF NOT EXISTS `shop`(
 	UNIQUE (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '商店';
 
-DROP TABLE IF EXISTS `shop_list`;
-CREATE TABLE IF NOT EXISTS `shop_list`(
+DROP TABLE IF EXISTS `goods`;
+CREATE TABLE IF NOT EXISTS `goods`(
 	`id`     	INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`uid`     INT UNSIGNED NOT NULL,
-	`shop_id` INT UNSIGNED NOT NULL COMMENT '超市名称',
+	`shop_id` INT UNSIGNED NOT NULL COMMENT '超市id',
+	`bill_id` VARCHAR(23) NOT NULL DEFAULT '' COMMENT '账单号',
 	`name`  	VARCHAR(255) NOT NULL COMMENT '名称',
 	`number`  	INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '数量',
 	`weight` INT UNSIGNED NOT NULL COMMENT '重量',
 	`single_price` DECIMAL(5,2) NOT NULL COMMENT '单价',
-	`final_price` DECIMAL(5,2) NOT NULL COMMENT '结算价格',
+	`final_price` DECIMAL(5,2) NOT NULL COMMENT '商品结算价格',
 	`create_by` int NOT NULL COMMENT '',
 	`update_by` int NOT NULL COMMENT '',
 	PRIMARY KEY(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '购物清单';
+
+DROP TABLE IF EXISTS `bills`;
+CREATE TABLE IF NOT EXISTS `bills`(
+	`bill_id`  VARCHAR(23) NOT NULL  COMMENT '账单号',
+	`shop_id`  INT UNSIGNED NOT NULL COMMENT '超市id',
+	`discount` DECIMAL(5,2) NOT NULL DEFAULT '0' COMMENT '折扣',
+	`price`    DECIMAL(5,2) NOT NULL DEFAULT '0' COMMENT '账单价格',
+	`create_at` int NOT NULL COMMENT '',
+	`update_at` int NOT NULL COMMENT '',
+	PRIMARY KEY(`bill_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '账单';

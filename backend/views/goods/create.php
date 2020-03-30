@@ -26,9 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
         format: 'yyyy-mm-dd'
     });
     var html = $('#templ_goods').html();
+    var $discount = $('#bills-discount');
     var $goods_div = $('#goods_div');
-    var $total = $('#total');
-    var total = 0;
+    var total = 0.00;
     $('#addition_goods').on('click',function() {
         $goods_div.append(html);
     });
@@ -38,15 +38,22 @@ $this->params['breadcrumbs'][] = $this->title;
     });
 
 
+    $(document).on('click','#checkout',function() {
+        $goods_div.find('.final_price').each(function () {
+            var val = parseFloat($(this).val());
+            total  += val;
+        });
+        var discount = parseFloat($discount.val());
+        $('#total').text(parseFloat(total-discount).toFixed(2));
+        // $(this).remove();
+        total = 0.00;
+
+    });
     $(document).on('click','.final_price',function() {
         $row = $(this).closest('.row');
         var price = $('.single_price',$row).val() * $('.number',$row).val() * $('.weight',$row).val();
         price = parseFloat(price).toFixed(2);
-        total = parseFloat(total);
-        price = parseFloat(price);
-        total += price;
         $(this).val(price);
-        $total.text(total);
     });
 
 
@@ -62,22 +69,27 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php $form = ActiveForm::begin(); ?>
         <div class="row">
             <div class="form-group">
+                <div class="col-sm-2">
+                    <?= $form->field($model, 'shop_id')->dropdownList($shops,['prompt'=>'选择商店名称'])->label('超市名称'); ?>
+                </div>
                 <div class="col-sm-1">
                     <?= Html::a('添加商店', ['shop/create'], ['class' => 'btn btn-success','style'=>'margin-top:25px;']) ?>
                 </div>
                 <div class="col-sm-2">
-                    <?= $form->field($model, 'shop_id')->dropdownList($shops,['prompt'=>'选择商店名称'])->label('超市名称'); ?>
+                    <?= $form->field($bills, 'bill_id')->textInput() ?>
+                </div>
+                <div class="col-sm-1">
+                    <?= $form->field($bills, 'discount')->textInput(['value'=>0]) ?>
                 </div>
                 <div class="col-sm-2">
                     <?= $form->field($model, 'create_by')->textInput(['data-provide'=>'datepicker']) ?>
                 </div>
+
                 <div class="col-sm-2">
                     <?= $form->field($model, 'update_by')->textInput(['data-provide'=>'datepicker']) ?>
                 </div>
-                <div class="col-sm-2">
-                    <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success','style'=>'margin-top:25px;']) ?>
-                </div>
                 <div class="col-sm-1"><a class="btn btn-success" id="addition_goods" href="javascript:void();" style="margin-top:38%;">增加一个商品</a></div>
+
             </div>
         </div>
         <div id="goods_div">
@@ -92,8 +104,16 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-1">
                 总金额: <span id="total">0.00</span>
+            </div>
+            <div class="col-sm-1"><a class="btn btn-success" id="checkout" href="javascript:void();">结算</a></div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success','style'=>'margin-top:25px;']) ?>
+                </div>
             </div>
         </div>
 

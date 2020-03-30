@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\models\Bills;
 use backend\models\Shop;
 use Yii;
 use backend\models\Goods;
@@ -75,43 +76,66 @@ class GoodsController extends Controller
     public function actionCreate()
     {
         $model = new Goods();
+        $bills = new Bills();
+        $total = 0;
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->uid = Yii::$app->user->identity->getId();
-            $model->create_by = strtotime($model->create_by);
-            $model->update_by = strtotime($model->update_by);
-            if(is_array($model->name)){
-                $data = [];
-                foreach ($model->name as $i => $item){
-                    $data[$i]['uid']            = $model->uid;
-                    $data[$i]['shop_id']        = $model->shop_id;
-                    $data[$i]['create_by']      = $model->create_by;
-                    $data[$i]['update_by']      = $model->update_by;
-                    $data[$i]['name']           = $model->name[$i];
-                    $data[$i]['number']         = $model->number[$i];
-                    $data[$i]['weight']         = $model->weight[$i];
-                    $data[$i]['single_price']   = $model->single_price[$i];
-                    $data[$i]['final_price']    = $model->final_price[$i];
+        if ($bills->load(Yii::$app->request->post())) {
+            $bills->bill_id = empty($bills->bill_id) ? Bills::generateId() : $bills->bill_id;
+            if ($model->load(Yii::$app->request->post())) {
+
+                $model->uid = Yii::$app->user->identity->getId();
+                $model->create_by = strtotime($model->create_by);
+                $model->update_by = strtotime($model->update_by);
+
+                $bills->create_at = $model->create_by;
+                $bills->update_at = $model->update_by;
+                $bills->shop_id   = $model->shop_id;
+                $bills->price     = 0;
+
+                if($bills->validate()){
+                    if (is_array($model->name)) {
+                        $data = [];
+                        foreach ($model->name as $i => $item) {
+                            $data[$i]['uid'] = $model->uid;
+                            $data[$i]['shop_id'] = $model->shop_id;
+                            $data[$i]['bill_id'] = $bills->bill_id;
+                            $data[$i]['create_by'] = $model->create_by;
+                            $data[$i]['update_by'] = $model->update_by;
+                            $data[$i]['name'] = $model->name[$i];
+                            $data[$i]['number'] = $model->number[$i];
+                            $data[$i]['weight'] = $model->weight[$i];
+                            $data[$i]['single_price'] = $model->single_price[$i];
+                            $data[$i]['final_price'] = $model->final_price[$i];
+                            $total += (double)$data[$i]['final_price'];
+                        }
+                        Yii::$app->db->transaction(function ($db) use ($data) {
+                            $db->createCommand()->batchInsert('goods', [
+                                'uid',
+                                'shop_id',
+                                'bill_id',
+                                'create_by',
+                                'update_by',
+                                'name',
+                                'number',
+                                'weight',
+                                'single_price',
+                                'final_price'
+                            ], $data)->execute();
+
+                        });
+                    } else {
+                        $total = (double)$model->final_price;
+                        $model->save();
+                    }
+
+                    $bills->price = (double)$total - (double)$bills->discount;
+                    $bills->save();
                 }
-                Yii::$app->db->transaction(function($db) use($data) {
-                    $db->createCommand()->batchInsert('goods', [
-                        'uid',
-                        'shop_id',
-                        'create_by',
-                        'update_by',
-                        'name',
-                        'number',
-                        'weight',
-                        'single_price',
-                        'final_price'
-                    ], $data)->execute();
 
-                });
-            }else{
-                $model->save();
+
+
+
             }
-
-
         }
 
         $model->create_by = !empty($model->create_by) ? date('Y-m-d',$model->create_by) : '';
@@ -119,6 +143,7 @@ class GoodsController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'bills' => $bills,
             'shops' => Shop::getAll(),
         ]);
     }

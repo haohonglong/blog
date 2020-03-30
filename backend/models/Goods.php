@@ -22,7 +22,7 @@ use Yii;
 class Goods extends \yii\db\ActiveRecord
 {
 
-
+    public $bill_id;
     /**
      * {@inheritdoc}
      */
@@ -37,7 +37,7 @@ class Goods extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'shop_id', 'name', 'weight', 'single_price', 'final_price', 'create_by', 'update_by'], 'required'],
+            [['uid', 'shop_id','bill_id', 'name', 'weight', 'single_price', 'final_price', 'create_by', 'update_by'], 'required'],
             [['uid', 'shop_id', 'number'], 'integer'],
             [['weight'],'string','max'=>16],
             [['single_price', 'final_price'], 'number'],
@@ -79,6 +79,7 @@ class Goods extends \yii\db\ActiveRecord
             'uid' => Yii::t('app', 'Uid'),
             'shop' => Yii::t('app', '超市名称'),
             'shop_id' => Yii::t('app', '超市id'),
+            'bill_id' => Yii::t('app', '账单号'),
             'name' => Yii::t('app', '商品名称'),
             'number' => Yii::t('app', '数量'),
             'weight' => Yii::t('app', '重量'),
