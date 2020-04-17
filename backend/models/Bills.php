@@ -17,7 +17,6 @@ use Yii;
 class Bills extends \yii\db\ActiveRecord
 {
 
-    public static $n = 0;
     /**
      * {@inheritdoc}
      */
@@ -28,8 +27,7 @@ class Bills extends \yii\db\ActiveRecord
 
     public static function generateId()
     {
-        static::$n++;
-        return uniqid().static::$n;
+        return time();
     }
 
     /**

@@ -38,6 +38,15 @@ class GoodsController extends Controller
      */
     public function actionIndex()
     {
+
+//        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        $data = Goods::find()->select([
+//            'id',
+//            'name'
+//        ])->asArray()->all();
+////        echo json_encode($data,JSON_UNESCAPED_UNICODE);
+//        return $data;
+//        exit;
         $searchModel = new GoodsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -69,6 +78,62 @@ class GoodsController extends Controller
     }
 
     /**
+     * @author: lhh
+     * 创建日期：2020-04-15
+     * 修改日期：2020-04-15
+     * 名称： addGoods
+     * 功能：添加一个或多个商品
+     * 说明：
+     * 注意：
+     * @param $model        商品模型
+     * @param $bill_id      账单号
+     * @return float|int    商品价格总数
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    private function addGoods($model,$bill_id)
+    {
+        $total = 0;
+        if (is_array($model->name)) {
+            $data = [];
+            foreach ($model->name as $i => $item) {
+                $data[$i]['uid'] = $model->uid;
+                $data[$i]['shop_id'] = $model->shop_id;
+                $data[$i]['bill_id'] = $bill_id;
+                $data[$i]['create_by'] = $model->create_by;
+                $data[$i]['update_by'] = $model->update_by;
+                $data[$i]['name'] = $model->name[$i];
+                $data[$i]['number'] = $model->number[$i];
+                $data[$i]['weight'] = $model->weight[$i];
+                $data[$i]['single_price'] = $model->single_price[$i];
+                $data[$i]['final_price'] = $model->final_price[$i];
+                $total += (double)$data[$i]['final_price'];
+            }
+            Yii::$app->db->transaction(function ($db) use ($data) {
+                $db->createCommand()->batchInsert('goods', [
+                    'uid',
+                    'shop_id',
+                    'bill_id',
+                    'create_by',
+                    'update_by',
+                    'name',
+                    'number',
+                    'weight',
+                    'single_price',
+                    'final_price'
+                ], $data)->execute();
+
+            });
+        } else {
+            $total = (double)$model->final_price;
+            $model->save();
+        }
+        return $total;
+    }
+
+
+
+    /**
      * Creates a new ShopList model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -77,63 +142,49 @@ class GoodsController extends Controller
     {
         $model = new Goods();
         $bills = new Bills();
-        $total = 0;
+
+        if($bill_id = Yii::$app->request->get('bill_id',null)){
+            $bills = Bills::find()->where(['bill_id'=>$bill_id])->limit(1)->one();
+            if(isset($bills)){
+                $model->shop_id = $bills->shop_id;
+            }else {
+                throw new \Exception("bill_id 不存在");
+            }
+        }
+
+
 
         if ($bills->load(Yii::$app->request->post())) {
-            $bills->bill_id = empty($bills->bill_id) ? Bills::generateId() : $bills->bill_id;
             if ($model->load(Yii::$app->request->post())) {
 
                 $model->uid = Yii::$app->user->identity->getId();
                 $model->create_by = strtotime($model->create_by);
                 $model->update_by = strtotime($model->update_by);
 
-                $bills->create_at = $model->create_by;
-                $bills->update_at = $model->update_by;
-                $bills->shop_id   = $model->shop_id;
-                $bills->price     = 0;
-
-                if($bills->validate()){
-                    if (is_array($model->name)) {
-                        $data = [];
-                        foreach ($model->name as $i => $item) {
-                            $data[$i]['uid'] = $model->uid;
-                            $data[$i]['shop_id'] = $model->shop_id;
-                            $data[$i]['bill_id'] = $bills->bill_id;
-                            $data[$i]['create_by'] = $model->create_by;
-                            $data[$i]['update_by'] = $model->update_by;
-                            $data[$i]['name'] = $model->name[$i];
-                            $data[$i]['number'] = $model->number[$i];
-                            $data[$i]['weight'] = $model->weight[$i];
-                            $data[$i]['single_price'] = $model->single_price[$i];
-                            $data[$i]['final_price'] = $model->final_price[$i];
-                            $total += (double)$data[$i]['final_price'];
-                        }
-                        Yii::$app->db->transaction(function ($db) use ($data) {
-                            $db->createCommand()->batchInsert('goods', [
-                                'uid',
-                                'shop_id',
-                                'bill_id',
-                                'create_by',
-                                'update_by',
-                                'name',
-                                'number',
-                                'weight',
-                                'single_price',
-                                'final_price'
-                            ], $data)->execute();
-
-                        });
-                    } else {
-                        $total = (double)$model->final_price;
-                        $model->save();
+                if(isset($bill_id)) {//根据账单号继续添加商品
+                    if($bill_id != $bills->bill_id){
+                        throw new \Exception("提交的bill_id 与数据库不符合");
+                    }else{
+                        $total = $this->addGoods($model,$bills->bill_id);
+                        $bills->price = (double)$bills->price + (double)$total;
+                        $bills->update_at = $model->create_by;
+                        $bills->save();
+                        return $this->redirect('index');
+                        exit;
                     }
-
-                    $bills->price = (double)$total - (double)$bills->discount;
-                    $bills->save();
+                }else {
+                    $bills->shop_id   = $model->shop_id;
+                    $bills->create_at = $model->create_by;
+                    $bills->update_at = $model->update_by;
+                    $bills->price = 0;
+                    if($bills->validate()){
+                        $total = $this->addGoods($model,$bills->bill_id);
+                        $bills->price = (double)$total - (double)$bills->discount;
+                        $bills->save();
+                        return $this->redirect('index');
+                        exit;
+                    }
                 }
-
-
-
 
             }
         }
@@ -144,6 +195,7 @@ class GoodsController extends Controller
         return $this->render('create', [
             'model' => $model,
             'bills' => $bills,
+            'bill_id' => isset($bill_id) ? $bill_id : Bills::generateId(),
             'shops' => Shop::getAll(),
         ]);
     }
@@ -158,12 +210,16 @@ class GoodsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $old_price = $model->final_price;
         $model->create_by = date('Y-m-d',$model->create_by);
         $model->update_by = date('Y-m-d',$model->update_by);
         if ($model->load(Yii::$app->request->post())) {
             $model->create_by = strtotime($model->create_by);
             $model->update_by = strtotime($model->update_by);
             if($model->save()){
+                $bills = Bills::find()->where(['bill_id'=>$model->bill_id])->limit(1)->one();
+                $bills->price = (double)$bills->price - (double)$old_price + (double)$model->final_price;
+                $bills->save();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 
@@ -226,8 +282,11 @@ class GoodsController extends Controller
     {
 //        $this->del();
 //        exit;
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $bills = Bills::find()->where(['bill_id'=>$model->bill_id])->limit(1)->one();
+        $bills->price = (double)$bills->price - (double)$model->final_price;
+        $bills->save();
+        $model->delete();
         return $this->redirect(['index']);
     }
 

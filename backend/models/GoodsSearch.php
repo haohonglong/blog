@@ -21,6 +21,7 @@ class GoodsSearch extends Goods
         return [
             [['id', 'uid', 'shop_id', 'number', 'weight', 'create_by', 'update_by'], 'integer'],
             [['name','shop_name'], 'safe'],
+            [['bill_id'], 'string'],
             [['single_price', 'final_price'], 'number'],
         ];
     }
@@ -64,7 +65,8 @@ class GoodsSearch extends Goods
     public function search($params)
     {
         $query = Goods::find();
-        $query->joinWith(['shop']);
+        $query
+            ->joinWith(['shop']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -88,6 +90,7 @@ class GoodsSearch extends Goods
         $query->andFilterWhere([
             'id' => $this->id,
             'uid' => $this->uid,
+            'bill_id' => $this->bill_id,
             'number' => $this->number,
             'weight' => $this->weight,
             'single_price' => $this->single_price,

@@ -4,13 +4,14 @@ CREATE DATABASE IF NOT EXISTS `blog` DEFAULT CHARACTER SET utf8 COLLATE utf8_gen
 USE `blog`;
 
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
+DROP TABLE IF EXISTS `_user`;
+CREATE TABLE `_user` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL DEFAULT '' COMMENT '用户注册名是唯一的 只能是邮箱名称',
   `password` varchar(100) NOT NULL COMMENT '用户密码',
-  `cdate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册日期',
-  `udate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册日期',
+  `active` varchar(32)  COMMENT '邮箱激活码',
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册日期',
+  `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册日期',
   `role` tinyint(1) NOT NULL DEFAULT '0' COMMENT '用户级别： 默认0 没有管理权限一般用户 ，1:普通管理员，2:二级管理员，3:超级管理员',
   `ip` varchar(15) NOT NULL DEFAULT '0' COMMENT '用bigint来记录inet_aton值 。最后一次登陆ip',
   PRIMARY KEY (`id`)
@@ -25,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password_reset_token` varchar(100) NOT NULL UNIQUE COMMENT '',
   `auth_key` varchar(32) NOT NULL UNIQUE COMMENT 'cookie验证auth_key',
   `email` varchar(255) NOT NULL UNIQUE COMMENT '用户邮箱',
+  `active` CHAR(32)  COMMENT '激活码',
   `avatar` varchar(255)  COMMENT '用户头像url',
   `phone` varchar(255) NOT NULL UNIQUE COMMENT '注册手机号',
   `is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否可见 默认是1 显示，0 ： 不显示',
@@ -32,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `created_at` int(11) NOT NULL COMMENT '创建时间',
   `updated_at` int(11) NOT NULL COMMENT '最后修改时间',
   PRIMARY KEY (`id`)
+  UNIQUE KEY(email)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户表';
 
 

@@ -105,4 +105,19 @@ class Help
 
     }
 
+    /**
+     * @author: lhh
+     * 创建日期：2020-04-09
+     * 修改日期：2020-04-09
+     * 名称： generateActiveCode
+     * 功能：生产邮箱激活码
+     * 说明：
+     * 注意：
+     * @return string
+     */
+    static public function generateActiveCode()
+    {
+        return md5(uniqid(rand(),true));
+    }
+
 }

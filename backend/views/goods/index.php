@@ -29,6 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
+            'bill_id',
+            'shop_id',
             'user.username',
             [
                 'label'=>'超市名称',

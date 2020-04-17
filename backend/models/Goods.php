@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use app\models\Bills;
 use common\models\User;
 use Yii;
 
@@ -22,7 +23,7 @@ use Yii;
 class Goods extends \yii\db\ActiveRecord
 {
 
-    public $bill_id;
+
     /**
      * {@inheritdoc}
      */
@@ -37,7 +38,7 @@ class Goods extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'shop_id','bill_id', 'name', 'weight', 'single_price', 'final_price', 'create_by', 'update_by'], 'required'],
+            [['uid', 'bill_id', 'shop_id', 'name', 'weight', 'single_price', 'final_price', 'create_by', 'update_by'], 'required'],
             [['uid', 'shop_id', 'number'], 'integer'],
             [['weight'],'string','max'=>16],
             [['single_price', 'final_price'], 'number'],
@@ -94,6 +95,8 @@ class Goods extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Shop::className(), ['id' => 'shop_id']);
     }
+
+
 
     public function getUser()
     {

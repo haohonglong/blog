@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::a('添加商店', ['shop/create'], ['class' => 'btn btn-success','style'=>'margin-top:25px;']) ?>
                 </div>
                 <div class="col-sm-2">
-                    <?= $form->field($bills, 'bill_id')->textInput() ?>
+                    <?= $form->field($bills, 'bill_id')->textInput(['value'=>$bill_id]) ?>
                 </div>
                 <div class="col-sm-1">
                     <?= $form->field($bills, 'discount')->textInput(['value'=>0]) ?>
