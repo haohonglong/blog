@@ -26,7 +26,7 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <script type="text/javascript">window._ROOT_ = '/';</script>
     <script type="text/javascript" src="/js/config.js"></script>
-    <script type="text/javascript" src="http://127.0.0.1/lamborghiniJS/LAM2/lamborghiniJS/base/System.js"></script>
+    <script type="text/javascript" src="http://lam2.core/base/System.js"></script>
     <script type="text/javascript">LAM.bootstrap();</script>
     <?php $this->head() ?>
     <?php $this->registerJs($this->blocks['js'], \yii\web\View::POS_END); //将编写的js代码注册到页面底部  ?>
@@ -83,6 +83,7 @@ AppAsset::register($this);
                 if (!Yii::$app->user->isGuest) {
                     $menuItems[] = ['label' => '抓取模版', 'url' => '/catch/index'];
                     $menuItems[] = ['label' => '文章列表', 'url' => '/article/index'];
+                    $menuItems[] = ['label' => '商品', 'url' => '/goods/index'];
                     $menuItems[] = ['label' => '视频列表', 'url' => '/video/index'];
                     $menuItems[] = ['label' => '网页地址', 'url' => '/link-address/index'];
                     $menuItems[] = ['label' => '类别管理', 'url' => '/sorts/index'];

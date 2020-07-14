@@ -51,7 +51,7 @@ class SortsForm extends Model
     {
         return [
             'id' => 'ID',
-            'pid' => '父级id',
+            'pid' => 'pid',
             'name' => '名称',
         ];
     }

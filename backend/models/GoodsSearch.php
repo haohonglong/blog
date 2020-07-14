@@ -97,7 +97,7 @@ class GoodsSearch extends Goods
             'final_price' => $this->final_price,
             'create_by' => $this->create_by,
             'update_by' => $this->update_by,
-        ]);
+        ])->orderBy(['id' => SORT_DESC]);
 
 
 

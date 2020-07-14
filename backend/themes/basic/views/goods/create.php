@@ -85,6 +85,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'create_by')->textInput(['data-provide'=>'datepicker']) ?>
                 </div>
 
+                <div class="col-sm-2">
+                    <?= $form->field($model, 'update_by')->textInput(['data-provide'=>'datepicker']) ?>
+                </div>
                 <div class="col-sm-1"><a class="btn btn-success" id="addition_goods" href="javascript:void();" style="margin-top:38%;">增加一个商品</a></div>
 
             </div>

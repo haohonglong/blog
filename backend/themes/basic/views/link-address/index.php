@@ -25,9 +25,13 @@ $this->params['breadcrumbs'][] = $this->title;
         ], System.classPath);
 
 
+        var temp = new System.Template();
+
+
+
         var cache = new System.Cache('menu_11');
         $(function () {
-
+            temp.parse($('#address_content_tpl').html());
             $(document).on("click","#address_menu a",function () {
                 $("#address_menu a").removeAttr('style'," ");
                 $(this).css({
@@ -87,7 +91,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     if(System.isString(list)){
                                         $('#address_content').html(list);
                                     }else{
-                                        $('#address_content').html(System.Compiler.jQCompile($('#address_content_tpl').html(),{list:list,sortid:id}));
+
+                                        $('#address_content').html(System.Template.getBlock('content',{list:list,sortid:id}));
                                     }
 
                                     return true;
@@ -173,13 +178,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <script type="text/html" id="address_content_tpl">
-    <% for(var i=0,len =list.length;i < len; i++){%>
-    <button class="btn btn-info MB10" data-id="<%=list[i]['id']%>">
-        <a href="<%=list[i]['url']%>" target="_blank"><%=list[i]['name']%></a>
-        <a href="/link-address/edit?id=<%=list[i]['id']%>&sortid=<%=sortid%>" target="_blank">修改</a>
-        <a href="javascript:void(0);" ref="del" data-id="<%=list[i]['id']%>" >删除</a>
+    <#Block:begin id="content" data="{'list':null}">
+    <%LAM.each(list,function(){%>
+    <button class="btn btn-info MB10" data-id="<%=this['id']%>">
+        <a href="<%=this['url']%>" target="_blank"><%=this['name']%></a>
+        <a href="/link-address/edit?id=<%=this['id']%>&sortid=<%=sortid%>" target="_blank">修改</a>
+        <a href="javascript:void(0);" ref="del" data-id="<%=this['id']%>" >删除</a>
     </button>
-    <% }%>
+    <% });%>
+    <#Block:end>
 
 </script>
 

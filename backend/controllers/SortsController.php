@@ -35,6 +35,7 @@ class SortsController extends BaseController
     public function actionAdd()
     {
         $model = new SortsForm();
+        $list = (new Query())->from('sorts')->select('id,name')->all();
         if ($model->load(Yii::$app->request->post())) {
             $model->pid = isset($model->pid) ? $model->pid : 0;
             if($model->validate() && $model->save()){
@@ -42,8 +43,10 @@ class SortsController extends BaseController
             }
 
         }
+
         return $this->render('add', [
             'model' => $model,
+            'list' => $list,
         ]);
     }
 

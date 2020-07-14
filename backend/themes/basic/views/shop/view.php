@@ -4,14 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\Goods */
+/* @var $model backend\models\Shop */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', '商品列表'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Shops'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="shop-list-view">
+<div class="shop-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -30,15 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'user.username',
-            'shop.name',
             'name',
-            'number',
-            'weight',
-            'single_price',
-            'final_price',
-            'create_by',
-            'update_by',
         ],
     ]) ?>
 

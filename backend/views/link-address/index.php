@@ -13,21 +13,31 @@ use yii\db\Query;
 $this->title = '网页地址';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<style type="text/css">
+    .mCustomScrollbar{height: 500px;overflow: auto;}
+    .mCSB_scrollTools .mCSB_draggerContainer{left:-43px;}
 
+</style>
 <script type="text/javascript">
     <?php $this->beginBlock('js'); ?>
     LAM.run(function () {
         'use strict';
         var System = this;
-        System.import([
-            '/base/Cache.class',
-            '/base/Storage.class'
-        ], System.classPath);
+        System
+            .import([
+                '/base/Cache.class',
+                '/base/Storage.class'
+            ], System.classPath);
+
+
+        var temp = new System.Template();
+
 
 
         var cache = new System.Cache('menu_11');
         $(function () {
 
+            temp.parse($('#address_content_tpl').html());
             $(document).on("click","#address_menu a",function () {
                 $("#address_menu a").removeAttr('style'," ");
                 $(this).css({
@@ -64,14 +74,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         this.sortid = id;
                         this.title = title;
                         var dom = this.$refs.menu[index];
-                        $("#address_menu")[0].scrollTop = dom.offsetTop;
+                        $("#mCSB_1_container").css("top", -dom.offsetTop);
                         cache.find('m_id',id,function (index,id) {
                             var _this = this;
                             var list=null;
                             if(-1 === index){
+                                var wait = layer.load();
                                 $.get('/link-address/index',{
                                     'sorts_id':id
                                 },function(D){
+                                    layer.close(wait);
                                     if(D.status){
                                         list = D.data;
                                         _this.add({list:list});
@@ -87,7 +99,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     if(System.isString(list)){
                                         $('#address_content').html(list);
                                     }else{
-                                        $('#address_content').html(System.Compiler.jQCompile($('#address_content_tpl').html(),{list:list,sortid:id}));
+
+                                        $('#address_content').html(System.Template.getBlock('content',{list:list,sortid:id}));
                                     }
 
                                     return true;
@@ -102,6 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     var v = this;
 
                     $.get('/link-address/index',function(D){
+                        $('.mCustomScrollbar').mCustomScrollbar();
                         if(D.status){
                             v.menu = D.data;
 
@@ -115,7 +129,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         dom = $menu.find("a[data-id='<?=$sorts_id?>']")[0];
                         if(dom){
                             dom.click();
-                            $menu[0].scrollTop = dom.offsetTop;
+                            $("#mCSB_1_container").css("top", -dom.offsetTop);
                             return true;
 
                         }
@@ -153,7 +167,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <div class="row">
-        <div class="col-md-3" id="address_menu">
+        <div class="col-md-3 mCustomScrollbar" id="address_menu" data-mcs-theme="dark">
             <div class="list-group">
                 <div v-if="menu.length">
                     <template v-for="(item, index) in menu">
@@ -173,13 +187,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <script type="text/html" id="address_content_tpl">
-    <% for(var i=0,len =list.length;i < len; i++){%>
-    <button class="btn btn-info MB10" data-id="<%=list[i]['id']%>">
-        <a href="<%=list[i]['url']%>" target="_blank"><%=list[i]['name']%></a>
-        <a href="/link-address/edit?id=<%=list[i]['id']%>&sortid=<%=sortid%>" target="_blank">修改</a>
-        <a href="javascript:void(0);" ref="del" data-id="<%=list[i]['id']%>" >删除</a>
+    <#Block:begin id="content" data="{'list':null}">
+    <%LAM.each(list,function(){%>
+    <button class="btn btn-info MB10" data-id="<%=this['id']%>">
+        <a href="<%=this['url']%>" target="_blank"><%=this['name']%></a>
+        <a href="/link-address/edit?id=<%=this['id']%>&sortid=<%=sortid%>" target="_blank">修改</a>
+        <a href="javascript:void(0);" ref="del" data-id="<%=this['id']%>" >删除</a>
     </button>
-    <% }%>
+    <% });%>
+    <#Block:end>
 
 </script>
 

@@ -8,14 +8,13 @@ use Yii;
 use backend\models\Goods;
 use backend\models\GoodsSearch;
 use yii\db\Query;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * ShopListController implements the CRUD actions for ShopList model.
  */
-class GoodsController extends Controller
+class GoodsController extends BaseController
 {
     /**
      * {@inheritdoc}
@@ -159,16 +158,18 @@ class GoodsController extends Controller
 
                 $model->uid = Yii::$app->user->identity->getId();
                 $model->create_by = strtotime($model->create_by);
-                $model->update_by = strtotime($model->update_by);
-
+                $model->update_by = $model->create_by;
+                Yii::$app->db->createCommand('LOCK TABLES '.Goods::tableName().' WRITE,'.Bills::tableName().' WRITE')->execute();
                 if(isset($bill_id)) {//根据账单号继续添加商品
                     if($bill_id != $bills->bill_id){
+                        Yii::$app->db->createCommand('UNLOCK TABLES')->execute();
                         throw new \Exception("提交的bill_id 与数据库不符合");
                     }else{
                         $total = $this->addGoods($model,$bills->bill_id);
                         $bills->price = (double)$bills->price + (double)$total;
                         $bills->update_at = $model->create_by;
                         $bills->save();
+                        Yii::$app->db->createCommand('UNLOCK TABLES')->execute();
                         return $this->redirect('index');
                         exit;
                     }
@@ -181,11 +182,12 @@ class GoodsController extends Controller
                         $total = $this->addGoods($model,$bills->bill_id);
                         $bills->price = (double)$total - (double)$bills->discount;
                         $bills->save();
+                        Yii::$app->db->createCommand('UNLOCK TABLES')->execute();
                         return $this->redirect('index');
                         exit;
                     }
                 }
-
+                Yii::$app->db->createCommand('UNLOCK TABLES')->execute();
             }
         }
 

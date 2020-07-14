@@ -44,7 +44,6 @@ class LinkAddressController extends BaseController
 
     public function actionIndex()
     {
-
         $keyword = trim(Yii::$app->request->get('keyword'));
 
 //        $posts = Yii::$app->db->createCommand('select id,name,sorts_id from url where sorts_id in(select id from sorts where id =1)')
@@ -53,6 +52,7 @@ class LinkAddressController extends BaseController
 //        exit;
 
         if(Yii::$app->request->isAjax){
+
 
             $sorts_id = Yii::$app->request->get('sorts_id');
 
