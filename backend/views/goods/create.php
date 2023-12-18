@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         format: 'yyyy-mm-dd'
     });
     var html = $('#templ_goods').html();
-    var $discount = $('#bills-discount');
+    var $discount = $('[name="Bills[discount]"]');
     var $goods_div = $('#goods_div');
     var total = 0.00;
     $('#addition_goods').on('click',function() {

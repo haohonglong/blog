@@ -20,24 +20,16 @@ $this->params['breadcrumbs'][] = $this->title;
 </style>
 <script type="text/javascript">
     <?php $this->beginBlock('js'); ?>
-    LAM.run(function () {
+    LAM.run([jQuery],function ($) {
         'use strict';
         var System = this;
-        System
-            .import([
-                '/base/Cache.class',
-                '/base/Storage.class'
-            ], System.classPath);
 
-
-        var temp = new System.Template();
 
 
 
         var cache = new System.Cache('menu_11');
         $(function () {
 
-            temp.parse($('#address_content_tpl').html());
             $(document).on("click","#address_menu a",function () {
                 $("#address_menu a").removeAttr('style'," ");
                 $(this).css({
@@ -45,29 +37,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 });
 
             });
+            
+        });
 
-            $(document).on("click","#address_content a[ref=del]",function () {
-                if(confirm("are you sure delete this?")){
-                    var id = $(this).data().id;
-                    var $button = $(this).parent('button');
-                    $.get('/link-address/remove',{'id':id},function(D){
-                        if(D.status){
-                            $button.remove();
-                        }else{
-                            alert('error');
-                        }
-                    },'json');
-                }
-
-
-            });
-
-            var vue =new Vue({
+        window.vue =new Vue({
                 el: '#container',
                 data: {
                     menu:[],
                     title:'',
-                    sortid:""
+                    sortid:"",
+                    contents: []
                 },
                 methods: {
                     content: function (id,title,index) {
@@ -77,7 +56,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         $("#mCSB_1_container").css("top", -dom.offsetTop);
                         cache.find('m_id',id,function (index,id) {
                             var _this = this;
-                            var list=null;
                             if(-1 === index){
                                 var wait = layer.load();
                                 $.get('/link-address/index',{
@@ -85,39 +63,38 @@ $this->params['breadcrumbs'][] = $this->title;
                                 },function(D){
                                     layer.close(wait);
                                     if(D.status){
-                                        list = D.data;
-                                        _this.add({list:list});
+                                        vue.contents = D.data;
+                                        _this.add({list: D.data});
                                     }else{
-                                        list = "没有数据";
+                                        vue.contents = [];
                                     }
+
                                 },'json');
                             }else{
-                                list = this.get(index).list;
+                                vue.contents = this.get(index).list;
                             }
-                            System.listen(function(){
-                                if(list){
-                                    if(System.isString(list)){
-                                        $('#address_content').html(list);
-                                    }else{
-
-                                        $('#address_content').html(System.Template.getBlock('content',{list:list,sortid:id}));
-                                    }
-
-                                    return true;
-                                }
-                            },1);
 
                         });
 
+                    },
+                    remove: function(id) {
+                        if(confirm("are you sure delete this?")){
+                            $.get('/link-address/remove',{'id':id},function(D){
+                                if(D.status){
+                                    vue.$router.go(0);
+                                }else{
+                                    alert('error');
+                                }
+                            },'json');
+                        }
                     }
                 },
                 created:function () {
-                    var v = this;
 
                     $.get('/link-address/index',function(D){
                         $('.mCustomScrollbar').mCustomScrollbar();
                         if(D.status){
-                            v.menu = D.data;
+                            vue.menu = D.data;
 
                         }
                     },'json');
@@ -140,7 +117,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
             });
-        });
 
 
     });
@@ -180,24 +156,16 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div class="col-md-9">
-            <div id="address_content"></div>
+            <button style="margin-right: 10px;" class="btn btn-info MB10" v-for="item in contents">
+                <a :href="item.url" target="_blank">{{ item.name }}</a>
+                <a :href="'/link-address/edit?id='+ item.id +'&sortid='+ sortid" target="_blank">修改</a>
+                <a @click="remove(item.id)" href="javascript:void(0);" >删除</a>
+            </button>
         </div>
     </div>
 </div>
 
 
-<script type="text/html" id="address_content_tpl">
-    <#Block:begin id="content" data="{'list':null}">
-    <%LAM.each(list,function(){%>
-    <button class="btn btn-info MB10" data-id="<%=this['id']%>">
-        <a href="<%=this['url']%>" target="_blank"><%=this['name']%></a>
-        <a href="/link-address/edit?id=<%=this['id']%>&sortid=<%=sortid%>" target="_blank">修改</a>
-        <a href="javascript:void(0);" ref="del" data-id="<%=this['id']%>" >删除</a>
-    </button>
-    <% });%>
-    <#Block:end>
-
-</script>
 
 
 

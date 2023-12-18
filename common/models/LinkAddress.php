@@ -58,6 +58,7 @@ class LinkAddress extends \yii\db\ActiveRecord
             [['url'], 'unique','message'=>'url已存在了'],
         ];
     }
+    
 
     /**
      * @inheritdoc

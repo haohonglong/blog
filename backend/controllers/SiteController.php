@@ -1,7 +1,9 @@
 <?php
 namespace backend\controllers;
 
-use common\models\{User,SignupFrom,LoginForm};
+use common\models\User;
+use common\models\SignupFrom;
+use common\models\LoginForm;
 use yii;
 
 /**

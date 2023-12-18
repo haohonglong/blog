@@ -9,40 +9,27 @@
 namespace common\models;
 
 use yii;
-use yii\base\Model;
 use yii\db\Query;
 
-class PostsForm extends Model
+class PostsForm extends Posts
 {
 
-    public $article_id,$posts_id,$content;
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['article_id', 'content'], 'required'],
-            [['article_id'], 'integer'],
-            [['content'], 'string'],
-        ];
-    }
+    
 
-    public function save()
+    public function save($runValidation = true, $attributeNames = NULL)
     {
         if($this->validate()){
-            $posts = new Posts();
-            $posts->article_id = $this->article_id;
-            $posts->posts_id = isset($this->posts_id) ? $this->posts_id : 0;
-            $posts->content    = $this->content;
-            $posts->date    = date('Y-m-d H:i:s');
-            $posts->ip    = Yii::$app->getRequest()->getUserIP();
-            if(!$posts->save()){
-                $this->addError($posts->getErrors());
-                return false;
+            $this->date    = date('Y-m-d H:i:s');
+            $this->ip    = Yii::$app->getRequest()->getUserIP();
+            var_dump($this->attributes);exit;
+            if($this->save(false)){
+                echo "1";exit;
+                return true;
+            }else {
+                echo "2";exit;
+                return $this->getErrors();
             }
-            return true;
         }
 
         return false;
@@ -50,7 +37,7 @@ class PostsForm extends Model
 
     public function remove($id)
     {
-        $posts = Posts::find()->where(['id'=>$id])->limit(1)->one();
+        $posts = static::find()->where(['id'=>$id])->limit(1)->one();
         if(!$posts){return false;}
         $query = (new Query())->from('posts')->select('id')->where(['posts_id'=>$id])->limit(1)->one();
         if($query){//帖子有对应的回复的话就不能删除

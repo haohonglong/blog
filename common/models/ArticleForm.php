@@ -9,11 +9,10 @@
 namespace common\models;
 
 use yii;
-use yii\base\Model;
 use yii\db\Query;
 use yii\helpers\Html;
 
-class ArticleForm extends Model
+class ArticleForm extends Article
 {
     public $id,$sorts_id,$title,$content,$model;
 
@@ -26,7 +25,7 @@ class ArticleForm extends Model
         ];
     }
 
-    public function save()
+    public function save($runValidation = true, $attributeNames = NULL)
     {
         if($this->validate()){
             $article = $this->model;

@@ -12,27 +12,37 @@ use yii\widgets\ActiveForm;
 $this->title = '抓取模版';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<script id="content_temp" type="text/template">
+
+<#Block:begin id="content">
+    <div class="row" style="margin-top:10px">
+        <div class="col-lg-5">
+            <div class="input-group">
+            <input type="text" class="form-control" name="search[]">
+            </div>
+        </div>
+        <div class="col-lg-2">--</div>
+        <div class="col-lg-5">
+            <div class="input-group">
+                <input type="text" class="form-control" name="replace[]">
+            </div>
+        </div>
+    </div>
+
+<#Block:end>
+</script>
+
 <script type="text/javascript">
     LAM.run(function () {
         'use strict';
         var System = this;
-        var tag = System.Html.tag;
-        var tpl = tag('div',{'class':'row','style':'margin-top:10px'},
-                    [
-                        tag('div',{'class':'col-lg-5'},
-                            tag('div',{'class':'input-group'},
-                                tag(true,'input',{'type':'text','class':'form-control','name':'search[]'}))
-                        ),
-                        tag('div',{'class':'col-lg-2'},'--'),
-                        tag('div',{'class':'col-lg-5'},
-                            tag('div',{'class':'input-group'},
-                                tag(true,'input',{'type':'text','class':'form-control','name':'replace[]'}))
-                        )
-                    ]);
+        var temp = new System.Template();
 
         $(function () {
+            temp.parse($('#content_temp').html());
+            var content = System.Template.getBlock("content");
             $('#replace_button').on('click',function () {
-                $('#replaces_content').append(tpl);
+                $('#replaces_content').append(content);
             });
         });
     });
@@ -59,5 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
+
+
 
 

@@ -32,6 +32,18 @@ class Sorts extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function has_name($name, $pid=0)
+    {
+        $n = static::find()
+        ->where(['name' => $name, 'pid'=>$pid])
+        -limit(1)
+        ->count();
+        if($n > 0) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * @inheritdoc
      */

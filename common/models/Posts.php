@@ -31,7 +31,7 @@ class Posts extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['article_id', 'content', 'ip'], 'required'],
+            [['article_id', 'content'], 'required'],
             [['article_id', 'posts_id'], 'integer'],
             [['content'], 'string'],
             [['date'], 'safe'],

@@ -9,25 +9,12 @@
 namespace common\models;
 
 
-use yii\base\Model;
+// use yii\base\Model;
 
-class LinkAddressForm extends Model
+class LinkAddressForm extends LinkAddress
 {
     public $sorts_id,$name,$info,$url,$model;
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['name', 'info', 'sorts_id'], 'required'],
-            [['sorts_id'], 'integer'],
-            [['name'], 'string', 'max' => 255],
-            [['url'], 'string', 'max' => 1024],
-            [['info'], 'string'],
-
-        ];
-    }
+    
     
     public function save()
     {
@@ -50,18 +37,4 @@ class LinkAddressForm extends Model
     }
 
 
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'name' => '名称',
-            'url' => 'Url',
-            'info' => '表述内容',
-            'date' => '日期',
-            'sorts_id' => '类别',
-        ];
-    }
 }
