@@ -6,7 +6,7 @@ USE `blog`;
 
 DROP TABLE IF EXISTS `_user`;
 CREATE TABLE `_user` (
-  `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL DEFAULT '' COMMENT '用户注册名是唯一的 只能是邮箱名称',
   `password` varchar(100) NOT NULL COMMENT '用户密码',
   `active` varchar(32)  COMMENT '邮箱激活码',
@@ -16,6 +16,7 @@ CREATE TABLE `_user` (
   `ip` varchar(15) NOT NULL DEFAULT '0' COMMENT '用bigint来记录inet_aton值 。最后一次登陆ip',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+
 
 
 DROP TABLE IF EXISTS `user`;
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `active` CHAR(32)  COMMENT '激活码',
   `avatar` varchar(255)  COMMENT '用户头像url',
   `phone` varchar(255) NOT NULL UNIQUE COMMENT '注册手机号',
+  `wallet` decimal(19,2) NOT NULL DEFAULT '0.00' COMMENT '钱包',
   `is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否可见 默认是1 显示，0 ： 不显示',
   `ip` varchar(15) NOT NULL DEFAULT '0' COMMENT '用bigint来记录inet_aton值 。最后一次登陆ip',
   `created_at` int(11) NOT NULL COMMENT '创建时间',
@@ -36,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY(email)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户表';
+ALTER TABLE `user` ADD `wallet` decimal(19,2) NOT NULL DEFAULT '0.00' COMMENT '钱包' AFTER `phone`;
 
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE IF NOT EXISTS `role` (
@@ -90,11 +93,15 @@ CREATE TABLE `posts` (
 
 DROP TABLE IF EXISTS `sorts`;
 CREATE TABLE `sorts` (
-  `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `pid` tinyint(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'the parent id of sorts',
-  `name` VARCHAR(11)  NOT NULL COMMENT 'the name of sort',
-  PRIMARY KEY (`id`)
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `pid` int UNSIGNED NOT NULL DEFAULT 0 COMMENT 'the parent id of sorts',
+  `name` VARCHAR(100)  NOT NULL COMMENT 'the name of sort',
+  `code` VARCHAR(15) COMMENT '类别编号',
+  PRIMARY KEY (`id`),
+  UNIQUE (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='the sort table';
+
+ALTER TABLE `sorts` ADD `code` VARCHAR(15) COMMENT '类别编号' AFTER `name`;
 insert into `blog`.`sorts` (id,name) (select id,name from `management_of_system`.`sorts`)
 
 DROP TABLE IF EXISTS `vote`;
@@ -374,4 +381,160 @@ CREATE TABLE `unit` (
   PRIMARY KEY (`unit_id`),
   UNIQUE (`unit_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='计量单位';
+
+DROP TABLE IF EXISTS `stock`;
+CREATE TABLE `stock` (
+  `stock_id` VARCHAR(12) NOT NULL,
+  `stock_code` VARCHAR(12) NOT NULL COMMENT 'the code of the stock',
+  `stock_name` VARCHAR(128)  NOT NULL COMMENT 'the name of the stock',
+  `stock_price` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '最新股票价格',
+  `bought` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '买入时的价格',
+  `cost` DECIMAL(19,4) COMMENT '成本',
+  `tax` DECIMAL(19,3) NOT NULL DEFAULT '5.00' COMMENT '税',
+  `stock_number` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '持有股票的数量',
+  `open` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天开盘价',
+  `close` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '收盘价',
+  `lup` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '涨停',
+  `ldown` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '跌停',
+  `hight` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天最高价',
+  `low` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天最低价',
+  `average` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天均价',
+  `change` DECIMAL(19,2) NOT NULL DEFAULT '0.00' COMMENT '换手率unit:%',
+  `amplitude` DECIMAL(19,2) NOT NULL DEFAULT '0.00' COMMENT '振幅率unit:%',
+  `volume` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '成交量',
+  `amount` DECIMAL(19,2) NOT NULL DEFAULT '0' COMMENT '成交额',
+  `stock_remark` varchar(1000) DEFAULT '' COMMENT '备注',
+  `level` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '星级推荐',
+  `flag` TINYINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '1: testing',
+  `created_at` DATETIME NOT NULL DEFAULT '1970-01-01 00:00:01' COMMENT '',
+  `updated_at` DATETIME NOT NULL DEFAULT '1970-01-01 00:00:01' COMMENT '',
+  PRIMARY KEY (`stock_id`),
+  UNIQUE (`stock_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='股票';
+ALTER TABLE `stock` 
+ADD `cost` DECIMAL(19,4) COMMENT '成本' AFTER `bought`,
+ADD `tax` DECIMAL(19,3) NOT NULL DEFAULT '5.00' COMMENT '税' AFTER `cost`,
+ADD `flag` TINYINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '1: testing' AFTER `level`,
+ADD `stock_code` VARCHAR(12) NOT NULL COMMENT 'the code of the stock' AFTER `stock_id`;
+
+
+DROP TABLE IF EXISTS `stock_daily`;
+CREATE TABLE `stock_daily` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `stock_date_at` DATE NOT NULL COMMENT '每天股价的日期',
+  `stock_id` VARCHAR(12) NOT NULL COMMENT '',
+  `stock_price` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每股价格',
+  `open` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天开盘价',
+  `close` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '收盘价',
+  `lup` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '涨停',
+  `ldown` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '跌停',
+  `hight` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天最高价',
+  `low` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天最低价',
+  `average` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天均价',
+  `change` DECIMAL(19,2) NOT NULL DEFAULT '0.00' COMMENT '换手率unit:%',
+  `amplitude` DECIMAL(19,2) NOT NULL DEFAULT '0.00' COMMENT '振幅率unit:%',
+  `volume` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '成交量',
+  `amount` DECIMAL(19,2) NOT NULL DEFAULT '0' COMMENT '成交额',
+  `created_at` DATETIME NOT NULL COMMENT '',
+  `updated_at` DATETIME NOT NULL COMMENT '',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX uk_stock_id_stock_date_at (stock_id, stock_date_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='股票每日的相关信息';
+ALTER TABLE `stock_daily` 
+ADD UNIQUE INDEX uk_stock_id_stock_date_at (stock_id, stock_date_at),
+ADD `volume` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '成交量' AFTER `amplitude`,
+ADD `amount` DECIMAL(19,2) NOT NULL DEFAULT '0' COMMENT '成交额' AFTER `volume`;
+ADD `stock_price` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每股价格' AFTER `stock_id`;
+
+
+DROP TABLE IF EXISTS `stock_detail`;
+CREATE TABLE `stock_detail` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `stock_id` VARCHAR(12) NOT NULL,
+  `stock_price` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每股价格',
+  `stock_deal_total` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '成交的数量',
+  `stock_type` 	tinyint(1) DEFAULT '0' COMMENT '交易类别: 1买入,2卖出',
+  `stock_number` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '持有股票的数量的历史记录',
+  `stock_date_at` DATE NOT NULL COMMENT 'date',
+  `stock_time_at` TIME NOT NULL COMMENT 'time',
+  `created_at` DATETIME NOT NULL COMMENT '',
+  `open` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天开盘价',
+  `close` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '收盘价',
+  `lup` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '涨停',
+  `ldown` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '跌停',
+  `hight` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天最高价',
+  `low` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天最低价',
+  `average` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '每天均价',
+  `change` DECIMAL(19,2) NOT NULL DEFAULT '0.00' COMMENT '换手率unit:%',
+  `amplitude` DECIMAL(19,2) NOT NULL DEFAULT '0.00' COMMENT '振幅率unit:%',
+  `volume` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '成交量',
+  `amount` DECIMAL(19,2) NOT NULL DEFAULT '0' COMMENT '成交额',
+  `profit` DECIMAL(19,2) NOT NULL DEFAULT '0' COMMENT '利润',
+  `gone` 	tinyint(1) DEFAULT '0' COMMENT '是否清仓: 0否,1是',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='股票实时价格流水';
+ALTER TABLE `stock_detail` 
+ADD `gone` 	tinyint(1) DEFAULT '0' COMMENT '是否清仓: 0否,1是' AFTER `profit`,
+MODIFY `volume` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '成交量',
+ADD `profit` DECIMAL(19,2) NOT NULL DEFAULT '0.00' COMMENT '利润' AFTER `amount`;
+
+-- 核心查询索引
+ALTER TABLE `stock_detail` ADD INDEX `idx_stock_id_type` (`stock_id`, `stock_type`);
+ALTER TABLE `stock_detail` ADD INDEX `idx_stock_id_gone` (`stock_id`, `gone`);
+ALTER TABLE `stock_detail` ADD INDEX `idx_stock_id_created` (`stock_id`, `created_at`);
+ALTER TABLE `stock_detail` ADD INDEX `idx_stock_date` (`stock_date_at`);
+-- 复合索引用于复杂查询
+ALTER TABLE `stock_detail` ADD INDEX `idx_stock_id_type_gone` (`stock_id`, `stock_type`, `gone`);
+ALTER TABLE `stock_detail` ADD INDEX `idx_stock_id_created_gone` (`stock_id`, `created_at`, `gone`);
+
+
+
+
+DROP TABLE IF EXISTS `stock_history`;
+CREATE TABLE `stock_history` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userid` int(11) UNSIGNED NOT NULL COMMENT '',
+  `stock_id` VARCHAR(12) NOT NULL,
+  `stock_detail_id` INT UNSIGNED NOT NULL COMMENT '流水ID',
+  `stock_price` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '成交价',
+  `cost` decimal(19,4) COMMENT '成本',
+  `tax` DECIMAL(19,3) COMMENT '税',
+  `stock_deal_total` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '成交数量',
+  `stock_remain` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '剩余股票的数量',
+  `stock_type` 	tinyint(1) DEFAULT '1' COMMENT '交易类别: 1买入,2卖出',
+  `gone` 	tinyint(1) DEFAULT '0' COMMENT '是否清仓: 0否,1是',
+  `stock_remark` varchar(1000) DEFAULT '' COMMENT '备注',
+  `created_at` DATETIME NOT NULL COMMENT '交易日期',
+  `updated_at` DATETIME NOT NULL COMMENT '成本设定日期',
+  PRIMARY KEY (`id`),
+  UNIQUE (`stock_detail_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='交易历史';
+ALTER TABLE `stock_history` 
+ADD `gone` 	tinyint(1) DEFAULT '0' COMMENT '是否清仓: 0否,1是' AFTER `stock_type`,
+ADD `stock_remain` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '剩余股票的数量' AFTER `stock_deal_total`,
+ADD `tax` DECIMAL(19,3) NOT NULL DEFAULT '5.00' COMMENT '税' AFTER `stock_price`,
+ADD `stock_detail_id` INT UNSIGNED COMMENT '流水ID' AFTER `stock_id`,
+-- ADD UNIQUE (stock_detail_id),
+ADD `cost` DECIMAL(19,3) COMMENT '成本' AFTER `stock_detail_id`;
+
+
+DROP TABLE IF EXISTS `user_stock`;
+CREATE TABLE `user_stock` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userid` int(11) UNSIGNED NOT NULL COMMENT '',
+  `stock_id` VARCHAR(12) NOT NULL,
+  `bought` DECIMAL(19,3) NOT NULL DEFAULT '0.000' COMMENT '买入时的价格',
+  `cost` DECIMAL(19,4) COMMENT '成本',
+  `tax` DECIMAL(19,3) NOT NULL DEFAULT '5.00' COMMENT '税',
+  `stock_deal_total` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '成交数量',
+  `stock_remain` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '剩余股票的数量',
+  `flag` TINYINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '1: testing',
+  `gone` 	tinyint(1) DEFAULT '0' COMMENT '是否清仓: 0否,1是',
+  `created_at` DATETIME NOT NULL COMMENT '',
+  `updated_at` DATETIME NOT NULL COMMENT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_userid_stock_id` (`userid`,`stock_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户与股票关联表';
+ALTER TABLE `user_stock`
+ADD `flag` TINYINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '1: testing' AFTER `stock_remain`
 
